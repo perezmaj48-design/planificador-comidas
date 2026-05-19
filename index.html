@@ -26,7 +26,6 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -1433,6 +1432,7 @@
                             ${dish.image ? `<img src="${dish.image}" class="w-full h-20 object-cover rounded mb-2 pointer-events-none">` : ''}
                             <h4 class="font-semibold text-sm text-gray-800 dark:text-white pr-14 pointer-events-none leading-tight">${dish.name}</h4>
                             ${dish.description ? `<p class="text-xs text-gray-600 dark:text-gray-400 mt-1 pointer-events-none line-clamp-1">${dish.description}</p>` : ''}
+                            ${dish.recipe ? `<a href="${dish.recipe}" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline text-xs font-medium inline-block mt-2 relative z-20 no-print"><i class="fas fa-external-link-alt mr-1"></i>Ver receta</a>` : ''}
                         </div>
                     `;
                 }).join('');
