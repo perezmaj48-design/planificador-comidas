@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planificador Semanal de Comidas</title>
     
-    <!-- Configuración del Icono y App Nativa (PWA) -->
     <link rel="icon" type="image/png" href="icono.png">
     <link rel="apple-touch-icon" href="icono.png">
     <meta name="apple-mobile-web-app-title" content="Comidas">
@@ -16,7 +15,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
     
-    <!-- Configuración para habilitar el modo oscuro en Tailwind -->
     <script>
         tailwind = {
             config: {
@@ -171,6 +169,8 @@
         .action-buttons { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 10; }
         .action-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; border: none; font-size: 16px; }
         
+        .info-btn { background-color: rgba(14, 165, 233, 0.9); color: white; }
+        .info-btn:hover { background-color: rgba(14, 165, 233, 1); transform: scale(1.1); }
         .edit-btn { background-color: rgba(99, 102, 241, 0.9); color: white; }
         .edit-btn:hover { background-color: rgba(99, 102, 241, 1); transform: scale(1.1); }
         .list-btn { background-color: rgba(59, 130, 246, 0.9); color: white; }
@@ -315,7 +315,6 @@
     
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         
-        <!-- SECCIÓN 1: CALENDARIO SEMANAL -->
         <section class="bg-white dark:bg-gray-800 rounded-2xl card-shadow p-8 mb-8 transition-colors">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                 <h2 class="text-3xl font-bold text-gray-800 dark:text-white flex items-center">
@@ -355,11 +354,9 @@
             </div>
             
             <div class="calendar-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Se rellena con JS -->
-            </div>
+                </div>
         </section>
 
-        <!-- SECCIÓN 2: PLATOS DISPONIBLES -->
         <section class="bg-white dark:bg-gray-800 rounded-2xl card-shadow p-8 mb-8 no-print transition-colors">
             <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 flex items-center justify-between cursor-pointer select-none" onclick="toggleDishesSection()" title="Ocultar/Mostrar Platos">
                 <div class="flex items-center">
@@ -371,7 +368,6 @@
             
             <div id="dishesContentWrapper">
                 
-                <!-- Buscador -->
                 <div class="mb-6 relative">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
@@ -398,7 +394,6 @@
             </div>
         </section>
         
-        <!-- SECCIÓN 3: AÑADIR NUEVO PLATO -->
         <section class="bg-white dark:bg-gray-800 rounded-2xl card-shadow p-8 mb-8 dish-form-section transition-colors">
             <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
                 <i class="fas fa-plus-circle mr-3 text-indigo-600 dark:text-indigo-400"></i>
@@ -494,7 +489,6 @@
         
     </div>
 
-    <!-- PANEL LATERAL: LISTA DE LA COMPRA -->
     <div id="shoppingListOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] hidden transition-opacity duration-300 opacity-0 no-print" onclick="toggleShoppingList()"></div>
     <section id="shoppingListContainer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-800 shadow-2xl z-[1001] transform translate-x-full transition-transform duration-300 flex flex-col no-print">
         
@@ -538,7 +532,33 @@
         <p>Generado el <span id="printDate"></span></p>
     </div>
     
-    <!-- MODALES -->
+    <div id="dishInfoModal" class="modal">
+        <div class="modal-content modal-content-small bg-white dark:bg-gray-800 p-0 overflow-hidden">
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mr-4">
+                            <i class="fas fa-info-circle text-sky-600 dark:text-sky-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white" id="infoDishName">Nombre del Plato</h3>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" onclick="closeDishInfoModal()">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
+                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                        <i class="fas fa-shopping-basket mr-2 text-sky-500"></i> Ingredientes
+                    </h4>
+                    <div id="infoDishIngredients" class="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap"></div>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-900/50 px-6 py-4 flex justify-end border-t border-gray-100 dark:border-gray-700 shrink-0">
+                <button class="px-5 py-2.5 rounded-xl font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 transition-all" onclick="closeDishInfoModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="confirmModal" class="modal">
         <div class="modal-content bg-white dark:bg-gray-800 p-0 overflow-hidden">
             <div class="p-6 overflow-y-auto flex-1">
@@ -638,7 +658,6 @@
         </div>
     </div>
 
-    <!-- MODAL PARA SELECCIONAR PLATO DESDE EL CALENDARIO DIRECTAMENTE -->
     <div id="selectDishModal" class="modal">
         <div class="modal-content bg-white dark:bg-gray-800 p-0 overflow-hidden h-[80vh] flex flex-col">
             <div class="p-6 shrink-0 border-b border-gray-100 dark:border-gray-700">
@@ -662,8 +681,7 @@
             </div>
             
             <div class="p-4 overflow-y-auto flex-1 bg-gray-50 dark:bg-gray-900/50" id="selectDishGrid">
-                <!-- Se rellena con JS -->
-            </div>
+                </div>
             
             <div class="bg-white dark:bg-gray-800 px-6 py-4 flex justify-end border-t border-gray-100 dark:border-gray-700 shrink-0">
                 <button class="px-5 py-2.5 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-all" onclick="closeSelectDishModal()">Cerrar</button>
@@ -778,7 +796,6 @@
         <div class="shopping-list-print-items" id="shoppingListPrintItems"></div>
     </div>
     
-    <!-- Botones Flotantes -->
     <div class="print-btn no-print" onclick="printCalendar()" title="Imprimir calendario">
         <i class="fas fa-print"></i>
     </div>
@@ -1082,6 +1099,8 @@
                 e.stopPropagation(); openPlanModal(dishId);
             } else if (button.classList.contains('list-btn')) {
                 e.stopPropagation(); addDishIngredientsToList(dishId);
+            } else if (button.classList.contains('info-btn')) {
+                e.stopPropagation(); openDishInfoModal(dishId);
             }
         }
         
@@ -1268,6 +1287,7 @@
             const actionButtons = document.createElement('div');
             actionButtons.className = 'action-buttons';
             actionButtons.innerHTML = `
+                <button class="action-btn info-btn no-drag" title="Ver ingredientes"><i class="fas fa-info"></i></button>
                 <button class="action-btn edit-btn no-drag" title="Editar"><i class="fas fa-edit"></i></button>
                 <button class="action-btn list-btn no-drag" title="Añadir ingredientes"><i class="fas fa-cart-plus"></i></button>
                 <button class="action-btn plan-btn no-drag" title="Planificar"><i class="fas fa-calendar-alt"></i></button>
@@ -1422,15 +1442,18 @@
                     return `
                         <div class="bg-white dark:bg-gray-700 rounded-lg p-3 shadow-sm cursor-grab active:cursor-grabbing dish-inner-card relative group mb-3 border dark:border-gray-600" draggable="true" ondragstart="handlePlannedDragStart(event, '${slotKey}', ${dish.id}, '${mealType}')" ondragend="handleDragEnd(event)">
                             <div class="card-actions absolute top-2 right-2 flex gap-1 z-10 no-print">
-                                <button onclick="openMoveModal('${slotKey}', ${dish.id})" class="text-indigo-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-indigo-50" title="Replanificar/Mover">
+                                <button onclick="event.stopPropagation(); openDishInfoModal(${dish.id})" class="text-sky-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-sky-50" title="Ver ingredientes">
+                                    <i class="fas fa-info text-xs"></i>
+                                </button>
+                                <button onclick="event.stopPropagation(); openMoveModal('${slotKey}', ${dish.id})" class="text-indigo-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-indigo-50" title="Replanificar/Mover">
                                     <i class="fas fa-calendar-day text-xs"></i>
                                 </button>
-                                <button onclick="removeFromSlot('${slotKey}', ${dish.id})" class="text-red-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-red-50" title="Quitar plato">
+                                <button onclick="event.stopPropagation(); removeFromSlot('${slotKey}', ${dish.id})" class="text-red-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-red-50" title="Quitar plato">
                                     <i class="fas fa-times text-xs"></i>
                                 </button>
                             </div>
                             ${dish.image ? `<img src="${dish.image}" class="w-full h-20 object-cover rounded mb-2 pointer-events-none">` : ''}
-                            <h4 class="font-semibold text-sm text-gray-800 dark:text-white pr-14 pointer-events-none leading-tight">${dish.name}</h4>
+                            <h4 class="font-semibold text-sm text-gray-800 dark:text-white pr-20 pointer-events-none leading-tight">${dish.name}</h4>
                             ${dish.description ? `<p class="text-xs text-gray-600 dark:text-gray-400 mt-1 pointer-events-none line-clamp-1">${dish.description}</p>` : ''}
                             ${dish.recipe ? `<a href="${dish.recipe}" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline text-xs font-medium inline-block mt-2 relative z-20 no-print"><i class="fas fa-external-link-alt mr-1"></i>Ver receta</a>` : ''}
                         </div>
@@ -1567,6 +1590,30 @@
                 }
             }
             renderWeeklyCalendar(); savePlanningToCloud(); showToast('Plato quitado');
+        }
+
+        // -- MODAL INFORMACIÓN DEL PLATO --
+        function openDishInfoModal(dishId) {
+            const dish = dishes.find(d => d.id === dishId);
+            if (!dish) return;
+            
+            document.getElementById('infoDishName').textContent = dish.name;
+            const ingredientsDiv = document.getElementById('infoDishIngredients');
+            
+            if (dish.ingredients && dish.ingredients.trim() !== '') {
+                const items = dish.ingredients.split(/[,;\n]+/).map(i => i.trim()).filter(i => i);
+                ingredientsDiv.innerHTML = `<ul class="list-disc pl-5 space-y-1">` + 
+                    items.map(i => `<li>${i}</li>`).join('') + 
+                    `</ul>`;
+            } else {
+                ingredientsDiv.innerHTML = '<p class="italic text-gray-400">No hay ingredientes especificados para este plato.</p>';
+            }
+            
+            document.getElementById('dishInfoModal').style.display = 'block';
+        }
+
+        function closeDishInfoModal() {
+            document.getElementById('dishInfoModal').style.display = 'none';
         }
 
         // -- MODAL SELECCIONAR PLATO (DESDE CALENDARIO) --
@@ -1822,11 +1869,12 @@
         }
         
         window.onclick = function(event) {
-            const modalesIds = ['confirmModal', 'clearWeekModal', 'planModal', 'clearListModal', 'notesModal', 'moveModal', 'selectDishModal'];
+            const modalesIds = ['confirmModal', 'clearWeekModal', 'planModal', 'clearListModal', 'notesModal', 'moveModal', 'selectDishModal', 'dishInfoModal'];
             modalesIds.forEach(id => {
                 const modal = document.getElementById(id);
                 if (event.target === modal) {
                     if (id === 'selectDishModal') closeSelectDishModal();
+                    else if (id === 'dishInfoModal') closeDishInfoModal();
                     else modal.style.display = 'none';
                 }
             });
