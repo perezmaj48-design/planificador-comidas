@@ -29,127 +29,37 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
-        * {
-            font-family: 'Poppins', sans-serif;
-        }
+        * { font-family: 'Poppins', sans-serif; }
         
-        body {
-            transition: background-color 0.3s, color 0.3s;
-        }
+        body { transition: background-color 0.3s, color 0.3s; }
         
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+        .dark .card-shadow { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        .hover-scale { transition: transform 0.3s ease; }
+        .hover-scale:hover { transform: scale(1.05); }
         
-        .card-shadow {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
+        .dragging { opacity: 0.5; cursor: grabbing; }
+        .drag-over { background-color: #e0e7ff; border: 2px dashed #6366f1; transform: scale(1.02); }
+        .dark .drag-over { background-color: #374151; border-color: #818cf8; }
         
-        .dark .card-shadow {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
+        .meal-slot { min-height: 120px; transition: all 0.3s ease; }
+        .dish-card { cursor: grab; transition: all 0.3s ease; position: relative; }
+        .dish-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); }
+        .dark .dish-card:hover { box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); }
+        .dish-card:active { cursor: grabbing; }
         
-        .hover-scale {
-            transition: transform 0.3s ease;
-        }
-        
-        .hover-scale:hover {
-            transform: scale(1.05);
-        }
-        
-        .dragging {
-            opacity: 0.5;
-            cursor: grabbing;
-        }
-        
-        .drag-over {
-            background-color: #e0e7ff;
-            border: 2px dashed #6366f1;
-            transform: scale(1.02);
-        }
-        
-        .dark .drag-over {
-            background-color: #374151;
-            border-color: #818cf8;
-        }
-        
-        .meal-slot {
-            min-height: 120px;
-            transition: all 0.3s ease;
-        }
-        
-        .dish-card {
-            cursor: grab;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .dish-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-        
-        .dark .dish-card:hover {
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-        }
-        
-        .dish-card:active {
-            cursor: grabbing;
-        }
-        
-        .sync-indicator {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
-        
+        .sync-indicator { position: fixed; top: 20px; left: 20px; padding: 10px 20px; border-radius: 25px; font-size: 14px; font-weight: 500; transition: all 0.3s ease; z-index: 1000; backdrop-filter: blur(10px); }
         .sync-indicator.local { background-color: rgba(107, 114, 128, 0.9); color: white; }
         .sync-indicator.synced { background-color: rgba(16, 185, 129, 0.9); color: white; }
         .sync-indicator.syncing { background-color: rgba(245, 158, 11, 0.9); color: white; }
         .sync-indicator.error { background-color: rgba(239, 68, 68, 0.9); color: white; }
         
-        .image-upload {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-        }
+        .image-upload { position: relative; overflow: hidden; display: inline-block; }
+        .image-upload input[type=file] { position: absolute; left: -9999px; }
+        .image-preview { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
         
-        .image-upload input[type=file] {
-            position: absolute;
-            left: -9999px;
-        }
-        
-        .image-preview {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        
-        .floating-btn, .print-btn, .shopping-list-btn {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            z-index: 998;
-        }
-        
+        .floating-btn, .print-btn, .shopping-list-btn { position: fixed; width: 60px; height: 60px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; z-index: 998; }
         .floating-btn { bottom: 30px; right: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .print-btn { bottom: 30px; right: 100px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); z-index: 999; }
         .shopping-list-btn { bottom: 30px; right: 170px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
@@ -168,8 +78,8 @@
         
         .no-drag { user-drag: none; -webkit-user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
         
-        .action-buttons { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 10; }
-        .action-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; border: none; font-size: 16px; }
+        .action-buttons { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 10; flex-wrap: wrap; justify-content: flex-end; max-width: calc(100% - 20px); }
+        .action-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; border: none; font-size: 16px; margin-bottom: 4px; }
         
         .info-btn { background-color: rgba(14, 165, 233, 0.9); color: white; }
         .info-btn:hover { background-color: rgba(14, 165, 233, 1); transform: scale(1.1); }
@@ -193,33 +103,28 @@
         .tag-badge { display: inline-flex; align-items: center; padding: 2px 8px; background-color: #e0e7ff; color: #4f46e5; border-radius: 10px; font-size: 10px; font-weight: 600; margin-right: 4px; margin-top: 4px; }
         .dark .tag-badge { background-color: #3730a3; color: #e0e7ff; }
         
-        /* Colores para badges de tipos de comida */
         .meal-type-comida { background-color: #fef3c7; color: #d97706; }
         .meal-type-cena { background-color: #e0e7ff; color: #4f46e5; }
         .meal-type-postre { background-color: #fce7f3; color: #db2777; }
-        .meal-type-varios { background-color: #d1fae5; color: #059669; }
-        
+        .meal-type-ambos { background-color: #d1fae5; color: #059669; }
         .dark .meal-type-comida { background-color: #78350f; color: #fde68a; }
         .dark .meal-type-cena { background-color: #312e81; color: #c7d2fe; }
         .dark .meal-type-postre { background-color: #831843; color: #fbcfe8; }
-        .dark .meal-type-varios { background-color: #064e3b; color: #a7f3d0; }
+        .dark .meal-type-ambos { background-color: #064e3b; color: #a7f3d0; }
         
-        /* Dropdown Styles */
         .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; min-width: 200px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border-radius: 8px; z-index: 1000; overflow: hidden; margin-top: 10px; }
         .dropdown-menu.show { display: block; animation: fadeIn 0.2s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .dropdown-item { padding: 12px 16px; display: flex; align-items: center; text-decoration: none; transition: background-color 0.2s; cursor: pointer; }
         .dropdown-item i { margin-right: 10px; width: 20px; text-align: center; }
         
-        /* Toggle Switch */
         .toggle-checkbox:checked { right: 0; border-color: #68D391; }
         .toggle-checkbox:checked + .toggle-label { background-color: #68D391; }
         
-        /* Ocultar barra de scroll en Webkit (Chrome/Safari) para el panel lateral */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Estilos para impresión */
+        /* Estilos para impresión A4 Landscape */
         @media print {
             @page { size: A4 landscape; margin: 0.5cm; }
             * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
@@ -261,7 +166,6 @@
         .calendar-container { margin: 20px 0; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
         
-        /* Control hover per dish inner card */
         .dish-inner-card .card-actions { opacity: 0; transition: opacity 0.2s; }
         .dish-inner-card:hover .card-actions, .dish-inner-card:active .card-actions { opacity: 1; }
     </style>
@@ -280,28 +184,17 @@
                     <i class="fas fa-cog text-2xl"></i>
                 </button>
                 <div id="settingsDropdown" class="dropdown-menu bg-white dark:bg-gray-800 border dark:border-gray-700">
-                    <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Ajustes
-                    </div>
+                    <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Ajustes</div>
                     <div class="dropdown-item hover:bg-gray-50 dark:hover:bg-gray-700 flex justify-between items-center" onclick="event.stopPropagation()">
-                        <div class="flex items-center text-gray-700 dark:text-gray-200">
-                            <i class="fas fa-moon"></i> Modo Oscuro
-                        </div>
+                        <div class="flex items-center text-gray-700 dark:text-gray-200"><i class="fas fa-moon"></i> Modo Oscuro</div>
                         <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                             <input type="checkbox" name="toggle" id="darkModeToggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300" onchange="toggleDarkMode(this.checked)"/>
                             <label for="darkModeToggle" class="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"></label>
                         </div>
                     </div>
-                    <div class="px-4 py-3 border-y border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-2">
-                        Copias de seguridad
-                    </div>
-                    <a onclick="exportBackup()" class="dropdown-item text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <i class="fas fa-file-download text-indigo-500"></i> Descargar Copia
-                    </a>
-                    <a onclick="document.getElementById('importBackupFile').click()" class="dropdown-item text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <i class="fas fa-file-upload text-green-500"></i> Restaurar Copia
-                        <input type="file" id="importBackupFile" accept=".json" style="display: none" onchange="importBackup(event)">
-                    </a>
+                    <div class="px-4 py-3 border-y border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-2">Copias de seguridad</div>
+                    <a onclick="exportBackup()" class="dropdown-item text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"><i class="fas fa-file-download text-indigo-500"></i> Descargar Copia</a>
+                    <a onclick="document.getElementById('importBackupFile').click()" class="dropdown-item text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"><i class="fas fa-file-upload text-green-500"></i> Restaurar Copia<input type="file" id="importBackupFile" accept=".json" style="display: none" onchange="importBackup(event)"></a>
                 </div>
             </div>
             <button onclick="toggleFullScreen()" id="fullscreenBtn" class="text-white hover:text-indigo-200 transition-transform hover:scale-110 no-print" title="Pantalla completa">
@@ -321,7 +214,6 @@
     
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         
-        <!-- SECCIÓN 1: CALENDARIO SEMANAL -->
         <section class="bg-white dark:bg-gray-800 rounded-2xl card-shadow p-8 mb-8 transition-colors">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                 <h2 class="text-3xl font-bold text-gray-800 dark:text-white flex items-center">
@@ -337,35 +229,22 @@
                 <button class="week-nav-btn text-indigo-600 dark:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="navigateWeek(-1)" id="prevWeekBtn">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                
                 <div class="week-info text-gray-800 dark:text-white text-center">
-                    <i class="fas fa-calendar-alt text-indigo-500"></i>
-                    <span id="weekRange">Semana actual</span>
+                    <i class="fas fa-calendar-alt text-indigo-500"></i> <span id="weekRange">Semana actual</span>
                 </div>
-                
                 <div class="week-actions">
-                    <button class="week-action-btn border-gray-300 text-gray-600 dark:text-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="goToCurrentWeek()">
-                        Hoy
-                    </button>
-                    <button class="week-action-btn border-gray-300 text-gray-600 dark:text-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="clearWeek()" title="Limpiar todos los platos de la semana">
-                        <i class="fas fa-broom mr-1"></i>Limpiar
-                    </button>
-                    <button class="week-action-btn border-purple-300 text-purple-600 dark:text-purple-400 dark:border-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/30 font-medium" onclick="fillRandomWeek()" title="Rellenar huecos vacíos con platos aleatorios">
-                        <i class="fas fa-magic mr-1"></i>Sorpréndeme
-                    </button>
+                    <button class="week-action-btn border-gray-300 text-gray-600 dark:text-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="goToCurrentWeek()">Hoy</button>
+                    <button class="week-action-btn border-gray-300 text-gray-600 dark:text-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="clearWeek()" title="Limpiar todos los platos de la semana"><i class="fas fa-broom mr-1"></i>Limpiar</button>
+                    <button class="week-action-btn border-purple-300 text-purple-600 dark:text-purple-400 dark:border-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/30 font-medium" onclick="fillRandomWeek()" title="Rellenar huecos vacíos con platos aleatorios"><i class="fas fa-magic mr-1"></i>Sorpréndeme</button>
                 </div>
-                
                 <button class="week-nav-btn text-indigo-600 dark:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="navigateWeek(1)" id="nextWeekBtn">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
             
-            <div class="calendar-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Se rellena con JS -->
-            </div>
+            <div class="calendar-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </section>
 
-        <!-- SECCIÓN 2: PLATOS DISPONIBLES -->
         <section class="bg-white dark:bg-gray-800 rounded-2xl card-shadow p-8 mb-8 no-print transition-colors">
             <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 flex items-center justify-between cursor-pointer select-none" onclick="toggleDishesSection()" title="Ocultar/Mostrar Platos">
                 <div class="flex items-center">
@@ -376,163 +255,100 @@
             </h2>
             
             <div id="dishesContentWrapper">
-                
-                <!-- Buscador -->
                 <div class="mb-6 relative">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
-                    </div>
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fas fa-search text-gray-400 dark:text-gray-500"></i></div>
                     <input type="text" id="searchInput" placeholder="Buscar por nombre, etiqueta, ingrediente o descripción..." class="w-full pl-11 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 dark:text-white transition-all shadow-sm">
                 </div>
 
-                <!-- Pestañas actualizadas con Postres -->
-                <div class="flex flex-wrap gap-2 mb-6">
-                    <button class="tab-button active bg-indigo-600 text-white" onclick="switchTab('comidas')" id="btnTabComidas">
-                        <i class="fas fa-sun mr-2"></i>Comidas
-                    </button>
-                    <button class="tab-button bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300" onclick="switchTab('cenas')" id="btnTabCenas">
-                        <i class="fas fa-moon mr-2"></i>Cenas
-                    </button>
-                    <button class="tab-button bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300" onclick="switchTab('postres')" id="btnTabPostres">
-                        <i class="fas fa-ice-cream mr-2"></i>Postres
-                    </button>
+                <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar">
+                    <button class="tab-button active bg-indigo-600 text-white whitespace-nowrap" onclick="switchTab('comidas')" id="btnTabComidas"><i class="fas fa-sun mr-2"></i>Comidas</button>
+                    <button class="tab-button bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 whitespace-nowrap" onclick="switchTab('cenas')" id="btnTabCenas"><i class="fas fa-moon mr-2"></i>Cenas</button>
+                    <button class="tab-button bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 whitespace-nowrap" onclick="switchTab('postres')" id="btnTabPostres"><i class="fas fa-ice-cream mr-2 text-pink-500"></i>Postres</button>
                 </div>
                 
-                <div id="comidas-tab" class="tab-content active">
-                    <div id="comidasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-                </div>
-                
-                <div id="cenas-tab" class="tab-content">
-                    <div id="cenasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-                </div>
-
-                <div id="postres-tab" class="tab-content">
-                    <div id="postresContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
-                </div>
+                <div id="comidas-tab" class="tab-content active"><div id="comidasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div></div>
+                <div id="cenas-tab" class="tab-content"><div id="cenasContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div></div>
+                <div id="postres-tab" class="tab-content"><div id="postresContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div></div>
             </div>
         </section>
         
-        <!-- SECCIÓN 3: AÑADIR NUEVO PLATO -->
         <section class="bg-white dark:bg-gray-800 rounded-2xl card-shadow p-8 mb-8 dish-form-section transition-colors">
             <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">
-                <i class="fas fa-plus-circle mr-3 text-indigo-600 dark:text-indigo-400"></i>
-                <span id="formTitle">Añadir Nuevo Plato</span>
+                <i class="fas fa-plus-circle mr-3 text-indigo-600 dark:text-indigo-400"></i> <span id="formTitle">Añadir Nuevo Plato</span>
             </h2>
             <form id="dishForm" class="space-y-6">
                 <input type="hidden" id="editingDishId" value="">
-                
                 <div id="imagePreviewContainer" class="hidden">
                     <img id="imagePreview" class="image-preview" alt="Vista previa">
-                    <button type="button" id="removeImageBtn" class="text-red-500 hover:text-red-700 text-sm font-medium mt-2">
-                        <i class="fas fa-trash mr-1"></i>Eliminar imagen
-                    </button>
+                    <button type="button" id="removeImageBtn" class="text-red-500 hover:text-red-700 text-sm font-medium mt-2"><i class="fas fa-trash mr-1"></i>Eliminar imagen</button>
                 </div>
-                
                 <div class="image-upload">
                     <label for="dishImage" class="inline-flex items-center px-6 py-3 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-lg cursor-pointer hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors shadow-sm">
-                        <i class="fas fa-camera mr-2"></i>
-                        Subir foto del plato
+                        <i class="fas fa-camera mr-2"></i> Subir foto del plato
                     </label>
                     <input type="file" id="dishImage" accept="image/*">
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="dishName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-signature mr-1"></i>Nombre del Plato
-                        </label>
+                        <label for="dishName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><i class="fas fa-signature mr-1"></i>Nombre del Plato</label>
                         <input type="text" id="dishName" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 dark:text-white transition-all shadow-sm" placeholder="Ej: Paella Valenciana">
                     </div>
                     <div>
-                        <label for="dishTags" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-tags mr-1"></i>Etiquetas (separadas por comas)
-                        </label>
+                        <label for="dishTags" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><i class="fas fa-tags mr-1"></i>Etiquetas (separadas por comas)</label>
                         <input type="text" id="dishTags" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 dark:text-white transition-all shadow-sm" placeholder="Ej: Rápido, Saludable, Vegano...">
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-utensils mr-1"></i>Tipo de Plato
-                        </label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><i class="fas fa-utensils mr-1"></i>Tipo de Plato</label>
                         <div class="checkbox-group">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="dishTypeComida" name="dishType" value="comida">
-                                <label for="dishTypeComida" class="dark:text-gray-300">Comida</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="dishTypeCena" name="dishType" value="cena">
-                                <label for="dishTypeCena" class="dark:text-gray-300">Cena</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="dishTypePostre" name="dishType" value="postre">
-                                <label for="dishTypePostre" class="dark:text-gray-300">Postre</label>
-                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="dishTypeComida" name="dishType" value="comida"><label for="dishTypeComida" class="dark:text-gray-300">Comida</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="dishTypeCena" name="dishType" value="cena"><label for="dishTypeCena" class="dark:text-gray-300">Cena</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="dishTypePostre" name="dishType" value="postre"><label for="dishTypePostre" class="dark:text-gray-300">Postre</label></div>
                         </div>
                     </div>
                     <div>
-                        <label for="dishPlatform" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-globe mr-1"></i>Plataforma / Origen
-                        </label>
+                        <label for="dishPlatform" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><i class="fas fa-globe mr-1"></i>Plataforma / Origen</label>
                         <input type="text" id="dishPlatform" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 dark:text-white transition-all shadow-sm" placeholder="Ej: Receta de la abuela, Libro...">
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="dishDescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-align-left mr-1"></i>Descripción corta (Opcional)
-                        </label>
+                        <label for="dishDescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><i class="fas fa-align-left mr-1"></i>Descripción corta (Opcional)</label>
                         <input type="text" id="dishDescription" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 dark:text-white transition-all shadow-sm" placeholder="Ej: Plato tradicional valenciano">
                     </div>
                     <div>
-                        <label for="dishRecipe" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="fas fa-link mr-1"></i>URL de la Receta (Opcional)
-                        </label>
+                        <label for="dishRecipe" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><i class="fas fa-link mr-1"></i>URL de la Receta (Opcional)</label>
                         <input type="url" id="dishRecipe" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 dark:text-white transition-all shadow-sm" placeholder="https://...">
                     </div>
                 </div>
                 <div class="md:col-span-2">
-                    <label for="dishIngredients" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        <i class="fas fa-carrot mr-1"></i>Ingredientes (separados por comas)
-                    </label>
+                    <label for="dishIngredients" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><i class="fas fa-carrot mr-1"></i>Ingredientes (separados por comas)</label>
                     <textarea id="dishIngredients" rows="2" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-700 dark:text-white transition-all shadow-sm resize-none" placeholder="Ej: Arroz, Pollo, Pimiento..."></textarea>
                 </div>
                 <div class="flex gap-4 mt-6">
-                    <button type="submit" id="submitBtn" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 w-full md:w-auto shadow-md shadow-indigo-200 dark:shadow-none">
-                        <i class="fas fa-save mr-2"></i>Añadir Plato
-                    </button>
-                    <button type="button" id="cancelBtn" class="px-8 py-3 bg-gray-500 text-white font-medium rounded-lg hover:bg-gray-600 transition-all hidden w-full md:w-auto shadow-md">
-                        <i class="fas fa-times mr-2"></i>Cancelar
-                    </button>
+                    <button type="submit" id="submitBtn" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 w-full md:w-auto shadow-md shadow-indigo-200 dark:shadow-none"><i class="fas fa-save mr-2"></i>Añadir Plato</button>
+                    <button type="button" id="cancelBtn" class="px-8 py-3 bg-gray-500 text-white font-medium rounded-lg hover:bg-gray-600 transition-all hidden w-full md:w-auto shadow-md"><i class="fas fa-times mr-2"></i>Cancelar</button>
                 </div>
             </form>
         </section>
-        
     </div>
 
     <!-- PANEL LATERAL: LISTA DE LA COMPRA -->
     <div id="shoppingListOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] hidden transition-opacity duration-300 opacity-0 no-print" onclick="toggleShoppingList()"></div>
     <section id="shoppingListContainer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-800 shadow-2xl z-[1001] transform translate-x-full transition-transform duration-300 flex flex-col no-print">
-        
         <div class="flex justify-between items-center p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
-            <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
-                <i class="fas fa-shopping-cart text-amber-500 mr-3"></i> Lista de la Compra
-            </h2>
-            <button class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 flex items-center justify-center transition-colors" onclick="toggleShoppingList()">
-                <i class="fas fa-times"></i>
-            </button>
+            <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center"><i class="fas fa-shopping-cart text-amber-500 mr-3"></i> Lista de la Compra</h2>
+            <button class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 flex items-center justify-center transition-colors" onclick="toggleShoppingList()"><i class="fas fa-times"></i></button>
         </div>
-        
         <div class="flex-1 overflow-y-auto no-scrollbar p-6">
             <div class="flex gap-2 mb-6">
                 <input type="text" id="shoppingListInput" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white dark:bg-gray-700 dark:text-white transition-all shadow-sm" placeholder="Añadir ingrediente..." onkeypress="handleShoppingListKeyPress(event)">
-                <button class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl shadow-sm transition-colors flex items-center gap-2" onclick="addShoppingListItem()">
-                    <i class="fas fa-plus"></i> Añadir
-                </button>
+                <button class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl shadow-sm transition-colors flex items-center gap-2" onclick="addShoppingListItem()"><i class="fas fa-plus"></i> Añadir</button>
             </div>
-            
             <div id="shoppingListItems" class="space-y-2">
                 <div id="shoppingListEmpty" class="text-center py-12">
                     <i class="fas fa-shopping-basket text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
@@ -540,14 +356,9 @@
                 </div>
             </div>
         </div>
-        
         <div class="p-6 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex justify-between gap-4">
-            <button class="flex-1 py-3 px-4 rounded-xl font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all flex items-center justify-center gap-2" onclick="clearShoppingList()">
-                <i class="fas fa-trash-alt text-red-500"></i> Limpiar
-            </button>
-            <button class="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-green-600 hover:bg-green-700 shadow-md transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5" onclick="printShoppingList()">
-                <i class="fas fa-print"></i> Imprimir
-            </button>
+            <button class="flex-1 py-3 px-4 rounded-xl font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all flex items-center justify-center gap-2" onclick="clearShoppingList()"><i class="fas fa-trash-alt text-red-500"></i> Limpiar</button>
+            <button class="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-green-600 hover:bg-green-700 shadow-md transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5" onclick="printShoppingList()"><i class="fas fa-print"></i> Imprimir</button>
         </div>
     </section>
     
@@ -556,26 +367,19 @@
         <p>Generado el <span id="printDate"></span></p>
     </div>
     
-    <!-- MODALES -->
-    <!-- Modal Información del Plato -->
+    <!-- MODAL INFORMACIÓN DEL PLATO -->
     <div id="dishInfoModal" class="modal">
         <div class="modal-content modal-content-small bg-white dark:bg-gray-800 p-0 overflow-hidden">
             <div class="p-6 overflow-y-auto flex-1">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mr-4">
-                            <i class="fas fa-info-circle text-sky-600 dark:text-sky-400 text-xl"></i>
-                        </div>
+                        <div class="w-12 h-12 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center mr-4"><i class="fas fa-info-circle text-sky-600 dark:text-sky-400 text-xl"></i></div>
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white" id="infoDishName">Nombre del Plato</h3>
                     </div>
-                    <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" onclick="closeDishInfoModal()">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
+                    <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" onclick="closeDishInfoModal()"><i class="fas fa-times text-xl"></i></button>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4 border border-gray-100 dark:border-gray-700">
-                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                        <i class="fas fa-shopping-basket mr-2 text-sky-500"></i> Ingredientes
-                    </h4>
+                    <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center"><i class="fas fa-shopping-basket mr-2 text-sky-500"></i> Ingredientes</h4>
                     <div id="infoDishIngredients" class="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap"></div>
                 </div>
             </div>
@@ -585,18 +389,15 @@
         </div>
     </div>
 
+    <!-- OTROS MODALES -->
     <div id="confirmModal" class="modal">
         <div class="modal-content bg-white dark:bg-gray-800 p-0 overflow-hidden">
             <div class="p-6 overflow-y-auto flex-1">
                 <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-4">
-                        <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-500 text-xl"></i>
-                    </div>
+                    <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-4"><i class="fas fa-exclamation-triangle text-red-600 dark:text-red-500 text-xl"></i></div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Confirmar eliminación</h3>
                 </div>
-                <div class="text-gray-600 dark:text-gray-300 mb-2">
-                    ¿Estás seguro de que quieres eliminar este plato? Se borrará de toda tu biblioteca y calendarios.
-                </div>
+                <div class="text-gray-600 dark:text-gray-300 mb-2">¿Estás seguro de que quieres eliminar este plato? Se borrará de toda tu biblioteca y calendarios.</div>
             </div>
             <div class="bg-gray-50 dark:bg-gray-900/50 px-6 py-4 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-700 shrink-0">
                 <button class="px-5 py-2.5 rounded-xl font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 transition-all" onclick="closeModal()">Cancelar</button>
@@ -609,14 +410,10 @@
         <div class="modal-content modal-content-small bg-white dark:bg-gray-800 p-0 overflow-hidden">
             <div class="p-6 overflow-y-auto flex-1">
                 <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mr-4">
-                        <i class="fas fa-broom text-orange-600 dark:text-orange-500 text-xl"></i>
-                    </div>
+                    <div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mr-4"><i class="fas fa-broom text-orange-600 dark:text-orange-500 text-xl"></i></div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Limpiar semana</h3>
                 </div>
-                <div class="text-gray-600 dark:text-gray-300 mb-2">
-                    ¿Estás seguro de que quieres limpiar todos los platos planificados de esta semana?
-                </div>
+                <div class="text-gray-600 dark:text-gray-300 mb-2">¿Estás seguro de que quieres limpiar todos los platos planificados de esta semana?</div>
             </div>
             <div class="bg-gray-50 dark:bg-gray-900/50 px-6 py-4 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-700 shrink-0">
                 <button class="px-5 py-2.5 rounded-xl font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 transition-all" onclick="closeClearWeekModal()">Cancelar</button>
@@ -629,52 +426,40 @@
         <div class="modal-content bg-white dark:bg-gray-800 p-0 overflow-hidden">
             <div class="p-6 overflow-y-auto flex-1 no-scrollbar">
                 <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-4">
-                        <i class="fas fa-calendar-alt text-green-600 dark:text-green-500 text-xl"></i>
-                    </div>
+                    <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-4"><i class="fas fa-calendar-alt text-green-600 dark:text-green-500 text-xl"></i></div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Planificar Plato</h3>
                 </div>
-                
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 mb-6 border border-gray-100 dark:border-gray-700">
                     <h4 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Plato Seleccionado</h4>
                     <p><span class="text-lg font-bold text-indigo-600 dark:text-indigo-400" id="planDishName"></span></p>
                 </div>
-                
                 <div class="mb-6">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">¿Para qué comida?</h4>
-                    <div class="flex gap-4" id="planMealTypeContainer">
-                        <label id="planLabelComida" class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 transition-colors">
+                    <div class="flex gap-6">
+                        <label class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 transition-colors" id="planLabelComida">
                             <input type="radio" id="planMealTypeComida" name="planMealType" value="comida" class="w-5 h-5 text-indigo-600">
                             <span class="font-medium dark:text-white">Comida</span>
                         </label>
-                        <label id="planLabelCena" class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 transition-colors">
+                        <label class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 transition-colors" id="planLabelCena">
                             <input type="radio" id="planMealTypeCena" name="planMealType" value="cena" class="w-5 h-5 text-indigo-600">
                             <span class="font-medium dark:text-white">Cena</span>
                         </label>
                     </div>
                 </div>
-                
                 <div class="calendar-container">
                     <div class="flex justify-between items-center mb-4 bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg border border-gray-100 dark:border-gray-700">
-                        <button class="w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="changeMonth(-1)">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
+                        <button class="w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
                         <h3 id="calendarMonthYear" class="font-bold text-gray-800 dark:text-white text-lg"></h3>
                         <div class="flex gap-2">
                             <button class="px-4 py-2 rounded-md font-medium hover:bg-white dark:hover:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="goToCurrentMonth()">Hoy</button>
-                            <button class="w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="changeMonth(1)">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
+                            <button class="w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
                         </div>
                     </div>
                     <div class="calendar-grid" id="calendarGrid"></div>
                 </div>
-
                 <div class="mt-6 p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800/30">
                     <h4 class="font-semibold mb-3 text-indigo-900 dark:text-indigo-300">Fechas Seleccionadas</h4>
-                    <div class="flex flex-wrap gap-2" id="selectedDatesList">
-                        <p class="text-indigo-400 dark:text-indigo-500/70 text-sm italic">No has seleccionado ninguna fecha</p>
-                    </div>
+                    <div class="flex flex-wrap gap-2" id="selectedDatesList"><p class="text-indigo-400 dark:text-indigo-500/70 text-sm italic">No has seleccionado ninguna fecha</p></div>
                 </div>
             </div>
             <div class="bg-gray-50 dark:bg-gray-900/50 px-6 py-4 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-700 shrink-0">
@@ -684,33 +469,22 @@
         </div>
     </div>
 
-    <!-- MODAL PARA SELECCIONAR PLATO DESDE EL CALENDARIO DIRECTAMENTE -->
     <div id="selectDishModal" class="modal">
         <div class="modal-content bg-white dark:bg-gray-800 p-0 overflow-hidden h-[80vh] flex flex-col">
             <div class="p-6 shrink-0 border-b border-gray-100 dark:border-gray-700">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-4">
-                            <i class="fas fa-utensils text-indigo-600 dark:text-indigo-400 text-xl"></i>
-                        </div>
+                        <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-4"><i class="fas fa-utensils text-indigo-600 dark:text-indigo-400 text-xl"></i></div>
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white">Añadir plato a <span id="selectDishTargetText" class="lowercase text-indigo-500"></span></h3>
                     </div>
-                    <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" onclick="closeSelectDishModal()">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
+                    <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" onclick="closeSelectDishModal()"><i class="fas fa-times text-xl"></i></button>
                 </div>
                 <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
-                    </div>
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fas fa-search text-gray-400"></i></div>
                     <input type="text" id="searchDishForSlotInput" placeholder="Buscar por nombre o etiqueta..." class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-50 dark:bg-gray-700 dark:text-white transition-all shadow-sm" oninput="renderDishesForSelection()">
                 </div>
             </div>
-            
-            <div class="p-4 overflow-y-auto flex-1 bg-gray-50 dark:bg-gray-900/50" id="selectDishGrid">
-                <!-- Se rellena con JS -->
-            </div>
-            
+            <div class="p-4 overflow-y-auto flex-1 bg-gray-50 dark:bg-gray-900/50" id="selectDishGrid"></div>
             <div class="bg-white dark:bg-gray-800 px-6 py-4 flex justify-end border-t border-gray-100 dark:border-gray-700 shrink-0">
                 <button class="px-5 py-2.5 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-all" onclick="closeSelectDishModal()">Cerrar</button>
             </div>
@@ -721,14 +495,10 @@
         <div class="modal-content modal-content-small bg-white dark:bg-gray-800 p-0 overflow-hidden">
             <div class="p-6 overflow-y-auto flex-1">
                 <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-4">
-                        <i class="fas fa-trash-alt text-red-600 dark:text-red-500 text-xl"></i>
-                    </div>
+                    <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-4"><i class="fas fa-trash-alt text-red-600 dark:text-red-500 text-xl"></i></div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Limpiar Lista</h3>
                 </div>
-                <div class="text-gray-600 dark:text-gray-300 mb-2">
-                    ¿Estás seguro de que quieres borrar todos los ingredientes de la lista de la compra?
-                </div>
+                <div class="text-gray-600 dark:text-gray-300 mb-2">¿Estás seguro de que quieres borrar todos los ingredientes de la lista de la compra?</div>
             </div>
             <div class="bg-gray-50 dark:bg-gray-900/50 px-6 py-4 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-700 shrink-0">
                 <button class="px-5 py-2.5 rounded-xl font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 transition-all" onclick="closeClearListModal()">Cancelar</button>
@@ -741,21 +511,13 @@
         <div class="modal-content modal-content-small bg-white dark:bg-gray-800 p-0 overflow-hidden">
             <div class="p-6 overflow-y-auto flex-1">
                 <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-4">
-                        <i class="fas fa-sticky-note text-blue-600 dark:text-blue-400 text-xl"></i>
-                    </div>
+                    <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-4"><i class="fas fa-sticky-note text-blue-600 dark:text-blue-400 text-xl"></i></div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Notas de la comida</h3>
                 </div>
-                
                 <input type="hidden" id="noteSlotKey" value="">
-                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Escribe ingredientes que faltan u otras notas:
-                </label>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Escribe ingredientes que faltan u otras notas:</label>
                 <textarea id="slotNotes" rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 dark:bg-gray-700 dark:text-white transition-all resize-none shadow-sm" placeholder="Ej: Comprar tomates para el sofrito..."></textarea>
-                
-                <button type="button" onclick="addNotesToShoppingList()" class="mt-4 w-full py-3 px-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900/40 font-semibold transition-colors flex justify-center items-center gap-2 shadow-sm">
-                    <i class="fas fa-cart-plus"></i> Añadir a la lista de compra
-                </button>
+                <button type="button" onclick="addNotesToShoppingList()" class="mt-4 w-full py-3 px-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900/40 font-semibold transition-colors flex justify-center items-center gap-2 shadow-sm"><i class="fas fa-cart-plus"></i> Añadir a la lista de compra</button>
             </div>
             <div class="bg-gray-50 dark:bg-gray-900/50 px-6 py-4 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-700 shrink-0">
                 <button class="px-5 py-2.5 rounded-xl font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 transition-all" onclick="closeNotesModal()">Cancelar</button>
@@ -768,42 +530,27 @@
         <div class="modal-content bg-white dark:bg-gray-800 p-0 overflow-hidden">
             <div class="p-6 overflow-y-auto flex-1 no-scrollbar">
                 <div class="flex items-center mb-6">
-                    <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-4">
-                        <i class="fas fa-calendar-day text-indigo-600 dark:text-indigo-400 text-xl"></i>
-                    </div>
+                    <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-4"><i class="fas fa-calendar-day text-indigo-600 dark:text-indigo-400 text-xl"></i></div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Replanificar Plato</h3>
                 </div>
-                
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 mb-6 border border-gray-100 dark:border-gray-700">
                     <h4 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Mover Plato</h4>
                     <p><span class="text-lg font-bold text-indigo-600 dark:text-indigo-400" id="moveDishName"></span></p>
                 </div>
-                
                 <div class="mb-6">
                     <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">¿A qué comida?</h4>
-                    <div class="flex gap-4">
-                        <label id="moveMealTypeComidaContainer" class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 transition-colors">
-                            <input type="radio" id="moveMealTypeComida" name="moveMealType" value="comida" class="w-5 h-5 text-indigo-600">
-                            <span class="font-medium dark:text-white">Comida</span>
-                        </label>
-                        <label id="moveMealTypeCenaContainer" class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 transition-colors">
-                            <input type="radio" id="moveMealTypeCena" name="moveMealType" value="cena" class="w-5 h-5 text-indigo-600">
-                            <span class="font-medium dark:text-white">Cena</span>
-                        </label>
+                    <div class="flex gap-6">
+                        <label id="moveMealTypeComidaContainer" class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 transition-colors"><input type="radio" id="moveMealTypeComida" name="moveMealType" value="comida" class="w-5 h-5 text-indigo-600"><span class="font-medium dark:text-white">Comida</span></label>
+                        <label id="moveMealTypeCenaContainer" class="flex items-center gap-2 cursor-pointer p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex-1 transition-colors"><input type="radio" id="moveMealTypeCena" name="moveMealType" value="cena" class="w-5 h-5 text-indigo-600"><span class="font-medium dark:text-white">Cena</span></label>
                     </div>
                 </div>
-                
                 <div class="calendar-container">
                     <div class="flex justify-between items-center mb-4 bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg border border-gray-100 dark:border-gray-700">
-                        <button class="w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="changeMoveMonth(-1)">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
+                        <button class="w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="changeMoveMonth(-1)"><i class="fas fa-chevron-left"></i></button>
                         <h3 id="moveCalendarMonthYear" class="font-bold text-gray-800 dark:text-white text-lg"></h3>
                         <div class="flex gap-2">
                             <button class="px-4 py-2 rounded-md font-medium hover:bg-white dark:hover:bg-gray-600 text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="goToCurrentMoveMonth()">Hoy</button>
-                            <button class="w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="changeMoveMonth(1)">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
+                            <button class="w-10 h-10 rounded-md hover:bg-white dark:hover:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm transition-colors" onclick="changeMoveMonth(1)"><i class="fas fa-chevron-right"></i></button>
                         </div>
                     </div>
                     <div class="calendar-grid" id="moveCalendarGrid"></div>
@@ -824,93 +571,49 @@
         <div class="shopping-list-print-items" id="shoppingListPrintItems"></div>
     </div>
     
-    <div class="print-btn no-print" onclick="printCalendar()" title="Imprimir calendario">
-        <i class="fas fa-print"></i>
-    </div>
-    <div class="shopping-list-btn no-print" onclick="toggleShoppingList()" title="Lista de la compra">
-        <i class="fas fa-shopping-cart"></i>
-    </div>
-    <div class="floating-btn no-print" onclick="scrollToTop()">
-        <i class="fas fa-arrow-up"></i>
-    </div>
+    <div class="print-btn no-print" onclick="printCalendar()" title="Imprimir calendario"><i class="fas fa-print"></i></div>
+    <div class="shopping-list-btn no-print" onclick="toggleShoppingList()" title="Lista de la compra"><i class="fas fa-shopping-cart"></i></div>
+    <div class="floating-btn no-print" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></div>
     
     <div id="toast" class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg transform translate-y-full transition-transform duration-300 toast z-[9999]">
-        <div class="flex items-center">
-            <i class="fas fa-check-circle mr-3"></i>
-            <span id="toastMessage"></span>
-        </div>
+        <div class="flex items-center"><i class="fas fa-check-circle mr-3"></i><span id="toastMessage"></span></div>
     </div>
     
     <script>
         // Estado de la aplicación
         let dishes = [];
-        let weeklyPlan = {}; // Ahora mapea slotKey -> [dishId1, dishId2...]
-        let dishPlans = {}; // Opcional, pero mapeará dateKey -> {mealType: [dishIds]}
-        let weeklyNotes = {}; // Almacena notas de los slots
+        let weeklyPlan = {}; 
+        let dishPlans = {}; 
+        let weeklyNotes = {}; 
         let shoppingList = [];
         let editingDishId = null;
         
-        let db = null;
-        let auth = null;
-        let user = null;
-        let appId = 'default-app-id';
-        let isCloudReady = false;
-
-        let syncTimeout;
-        let currentImageData = null;
-        let imageRemoved = false;
-        let dishToDelete = null;
-        let currentTab = 'comidas';
-        let currentWeekOffset = 0;
-        let planningDishId = null;
-        let planningDish = null;
-        let selectedDates = [];
-        
-        // Variables para arrastrar y modal selección de plato
-        let draggedSourceSlot = null;
-        let draggedDishId = null;
-        let draggedMealType = null;
-        let targetSlotForSelection = null;
-        
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
-
-        // Variables para mover plato
-        let movingSlotKey = null;
-        let movingDishId = null;
-        let moveSelectedDate = null;
-        let moveCurrentMonth = new Date().getMonth();
-        let moveCurrentYear = new Date().getFullYear();
+        let db = null; let auth = null; let user = null; let appId = 'default-app-id'; let isCloudReady = false;
+        let syncTimeout; let currentImageData = null; let imageRemoved = false; let dishToDelete = null; let currentTab = 'comidas';
+        let currentWeekOffset = 0; let planningDishId = null; let planningDish = null; let selectedDates = [];
+        let draggedSourceSlot = null; let draggedDishId = null; let draggedMealType = null; let targetSlotForSelection = null;
+        let currentMonth = new Date().getMonth(); let currentYear = new Date().getFullYear();
+        let movingSlotKey = null; let movingDishId = null; let moveSelectedDate = null;
+        let moveCurrentMonth = new Date().getMonth(); let moveCurrentYear = new Date().getFullYear();
         
         const daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-        const mealTypes = ['comida', 'cena']; 
+        const mealTypes = ['comida', 'cena']; // Postres excluidos del calendario
         const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
+        // ¡ATENCIÓN! AQUÍ ES DONDE ESTABA EL ERROR ANTERIOR. VOLVEMOS A TU CARPETA ORIGINAL:
         const SHARED_USER_ID = 'mi-planificador-familiar';
 
-        // Cargar preferencias locales al iniciar
         document.addEventListener('DOMContentLoaded', () => {
             setupEventListeners();
-            
-            // Comprobar modo oscuro guardado
             const isDark = localStorage.getItem('darkMode') === 'true';
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('darkModeToggle').checked = true;
-            }
-
-            initFirebase();
-            updatePrintDate();
-            updateWeekDisplay();
+            if (isDark) { document.documentElement.classList.add('dark'); document.getElementById('darkModeToggle').checked = true; }
+            initFirebase(); updatePrintDate(); updateWeekDisplay();
         });
 
         function toggleDarkMode(isDark) {
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
+            if (isDark) document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
             localStorage.setItem('darkMode', isDark);
         }
         
@@ -921,9 +624,9 @@
                 const { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js");
                 const { getFirestore, collection, doc, onSnapshot } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
 
-                // 👇👇👇 PEGA AQUÍ TU CONFIGURACIÓN DE FIREBASE 👇👇👇
+                // 👇👇👇 PEGA AQUÍ TU CONFIGURACIÓN DE FIREBASE (TU API KEY REAL) 👇👇👇
                 const miConfiguracionFirebase = {
-                  apiKey: "AIzaSyB8WxzGrmKjdueXzcxrjqJxntSPxNHvRWA",
+                  apiKey: "AIzaSyB8WxzGrmKjdueXzcxrjqJxntSPxNHvRWA", // <--- CAMBIA ESTO
                   authDomain: "planificador-de-comidas-e51ec.firebaseapp.com",
                   projectId: "planificador-de-comidas-e51ec",
                   storageBucket: "planificador-de-comidas-e51ec.firebasestorage.app",
@@ -934,131 +637,91 @@
                 // 👆👆👆 ========================================== 👆👆👆
 
                 const envConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-                // Cambio clave: Usar envConfig si estamos en el Canvas, sino usar la configuración del usuario
-                const activeFirebaseConfig = envConfig || miConfiguracionFirebase;
+                const activeFirebaseConfig = miConfiguracionFirebase || envConfig;
                 appId = typeof __app_id !== 'undefined' ? __app_id : 'mi-app-comidas';
 
-                if (!activeFirebaseConfig) {
-                    showSyncStatus('local', 'Modo sin conexión');
-                    return;
-                }
+                if (!activeFirebaseConfig) { showSyncStatus('local', 'Modo sin conexión'); return; }
 
                 const app = initializeApp(activeFirebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
+                auth = getAuth(app); db = getFirestore(app);
 
                 const initAuth = async () => {
                   const isCanvasConfig = activeFirebaseConfig === envConfig && envConfig !== null;
                   if (isCanvasConfig && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
-                  } else {
-                    await signInAnonymously(auth);
-                  }
+                  } else { await signInAnonymously(auth); }
                 };
                 await initAuth();
 
                 onAuthStateChanged(auth, (u) => {
                     user = u;
                     if (user) {
-                        isCloudReady = true;
-                        showSyncStatus('synced', 'Nube Sincronizada');
+                        isCloudReady = true; showSyncStatus('synced', 'Nube Sincronizada');
                         setupFirestoreListeners(collection, doc, onSnapshot);
                     }
                 });
             } catch (e) {
                 console.error("Firebase init error", e);
-                let errorMsg = 'Error de conexión';
-                if (e.code === 'auth/admin-restricted-operation' || e.code === 'auth/operation-not-allowed') {
-                    errorMsg = 'Activa "Anónimo" en Firebase Auth';
-                } else if (e.code === 'auth/configuration-not-found') {
-                    errorMsg = 'Ve a Authentication y dale a Comenzar';
-                } else {
-                    errorMsg = 'Revisa la configuración';
-                }
-                showSyncStatus('error', errorMsg);
+                showSyncStatus('error', 'Error de conexión a Firebase');
             }
         }
 
         function setupFirestoreListeners(collection, doc, onSnapshot) {
-            // Escuchar Platos (usamos user.uid en vez del nombre fijo que causaba el error)
-            const dishesRef = collection(db, 'artifacts', appId, 'users', user.uid, 'dishes');
+            // USANDO SHARED_USER_ID EN VEZ DE user.uid PARA QUE CARGUEN TUS PLATOS DE SIEMPRE
+            const dishesRef = collection(db, 'artifacts', appId, 'users', SHARED_USER_ID, 'dishes');
             onSnapshot(dishesRef, (snapshot) => {
                 dishes = [];
-                snapshot.forEach((docSnap) => {
-                    dishes.push({ id: parseInt(docSnap.id), ...docSnap.data() });
-                });
-                renderDishesByType();
-                renderWeeklyCalendar();
+                snapshot.forEach((docSnap) => { dishes.push({ id: parseInt(docSnap.id), ...docSnap.data() }); });
+                renderDishesByType(); renderWeeklyCalendar();
             }, (err) => console.error(err));
 
-            // Escuchar Planificación Semanal
-            const planningRef = doc(db, 'artifacts', appId, 'users', user.uid, 'planning', 'data');
+            const planningRef = doc(db, 'artifacts', appId, 'users', SHARED_USER_ID, 'planning', 'data');
             onSnapshot(planningRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    weeklyPlan = data.weeklyPlan || {};
-                    dishPlans = data.dishPlans || {};
-                    weeklyNotes = data.weeklyNotes || {};
-
-                    Object.keys(weeklyPlan).forEach(key => {
-                        if (!Array.isArray(weeklyPlan[key])) weeklyPlan[key] = [weeklyPlan[key]];
-                    });
-                    Object.keys(dishPlans).forEach(date => {
-                        Object.keys(dishPlans[date]).forEach(meal => {
-                            if (!Array.isArray(dishPlans[date][meal])) dishPlans[date][meal] = [dishPlans[date][meal]];
-                        });
-                    });
-
-                } else {
-                    weeklyPlan = {}; dishPlans = {}; weeklyNotes = {};
-                }
+                    weeklyPlan = data.weeklyPlan || {}; dishPlans = data.dishPlans || {}; weeklyNotes = data.weeklyNotes || {};
+                    Object.keys(weeklyPlan).forEach(key => { if (!Array.isArray(weeklyPlan[key])) weeklyPlan[key] = [weeklyPlan[key]]; });
+                    Object.keys(dishPlans).forEach(date => { Object.keys(dishPlans[date]).forEach(meal => { if (!Array.isArray(dishPlans[date][meal])) dishPlans[date][meal] = [dishPlans[date][meal]]; }); });
+                } else { weeklyPlan = {}; dishPlans = {}; weeklyNotes = {}; }
                 renderWeeklyCalendar();
             }, (err) => console.error(err));
 
-            // Escuchar Lista de la Compra
-            const shoppingRef = doc(db, 'artifacts', appId, 'users', user.uid, 'shopping', 'data');
+            const shoppingRef = doc(db, 'artifacts', appId, 'users', SHARED_USER_ID, 'shopping', 'data');
             onSnapshot(shoppingRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    shoppingList = docSnap.data().list || [];
-                } else {
-                    shoppingList = [];
-                }
+                if (docSnap.exists()) { shoppingList = docSnap.data().list || []; } else { shoppingList = []; }
                 renderShoppingList();
             }, (err) => console.error(err));
         }
 
         async function saveDishToCloud(dish) {
-            if (!isCloudReady || !user) return;
+            if (!isCloudReady) return;
             try {
                 const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-                const dishRef = doc(db, 'artifacts', appId, 'users', user.uid, 'dishes', dish.id.toString());
+                const dishRef = doc(db, 'artifacts', appId, 'users', SHARED_USER_ID, 'dishes', dish.id.toString());
                 await setDoc(dishRef, dish);
-            } catch (err) {
-                console.error("Error al subir plato:", err);
-                showToast("Error: imagen muy pesada o permisos insuficientes.");
-            }
+            } catch (err) { showToast("Error al guardar en la nube."); }
         }
 
         async function deleteDishFromCloud(dishId) {
-            if (!isCloudReady || !user) return;
+            if (!isCloudReady) return;
             const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-            const dishRef = doc(db, 'artifacts', appId, 'users', user.uid, 'dishes', dishId.toString());
+            const dishRef = doc(db, 'artifacts', appId, 'users', SHARED_USER_ID, 'dishes', dishId.toString());
             await deleteDoc(dishRef);
         }
 
         async function savePlanningToCloud() {
-            if (!isCloudReady || !user) return;
+            if (!isCloudReady) return;
             showSyncStatus('syncing', 'Guardando...');
             const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-            const planningRef = doc(db, 'artifacts', appId, 'users', user.uid, 'planning', 'data');
+            const planningRef = doc(db, 'artifacts', appId, 'users', SHARED_USER_ID, 'planning', 'data');
             await setDoc(planningRef, { weeklyPlan, dishPlans, weeklyNotes });
             showSyncStatus('synced', 'Nube Sincronizada');
         }
 
         async function saveShoppingToCloud() {
-            if (!isCloudReady || !user) return;
+            if (!isCloudReady) return;
             const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-            const shoppingRef = doc(db, 'artifacts', appId, 'users', user.uid, 'shopping', 'data');
+            const shoppingRef = doc(db, 'artifacts', appId, 'users', SHARED_USER_ID, 'shopping', 'data');
             await setDoc(shoppingRef, { list: shoppingList });
         }
         
@@ -1075,27 +738,15 @@
         }
         
         function showSyncStatus(status, message) {
-            const indicator = document.getElementById('syncIndicator');
-            const text = document.getElementById('syncText');
-            indicator.className = `sync-indicator ${status}`;
-            text.textContent = message;
-            indicator.style.opacity = '1';
-            if (status === 'synced') {
-                clearTimeout(syncTimeout);
-                syncTimeout = setTimeout(() => { indicator.style.opacity = '0.7'; }, 3000);
-            }
+            const indicator = document.getElementById('syncIndicator'); const text = document.getElementById('syncText');
+            indicator.className = `sync-indicator ${status}`; text.textContent = message; indicator.style.opacity = '1';
+            if (status === 'synced') { clearTimeout(syncTimeout); syncTimeout = setTimeout(() => { indicator.style.opacity = '0.7'; }, 3000); }
         }
 
         function toggleDishesSection() {
-            const wrapper = document.getElementById('dishesContentWrapper');
-            const icon = document.getElementById('dishesToggleIcon');
-            if (wrapper.classList.contains('hidden')) {
-                wrapper.classList.remove('hidden');
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                wrapper.classList.add('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            }
+            const wrapper = document.getElementById('dishesContentWrapper'); const icon = document.getElementById('dishesToggleIcon');
+            if (wrapper.classList.contains('hidden')) { wrapper.classList.remove('hidden'); icon.style.transform = 'rotate(0deg)'; } 
+            else { wrapper.classList.add('hidden'); icon.style.transform = 'rotate(180deg)'; }
         }
         
         function switchTab(tab) {
@@ -1114,24 +765,15 @@
         }
         
         function handleDishActions(e) {
-            const target = e.target;
-            const button = target.closest('.action-btn');
-            if (!button) return;
-            const dishCard = target.closest('.dish-card');
-            if (!dishCard) return;
+            const target = e.target; const button = target.closest('.action-btn'); if (!button) return;
+            const dishCard = target.closest('.dish-card'); if (!dishCard) return;
             const dishId = parseInt(dishCard.dataset.dishId);
             
-            if (button.classList.contains('edit-btn')) {
-                e.stopPropagation(); editDish(dishId);
-            } else if (button.classList.contains('delete-btn')) {
-                e.stopPropagation(); showDeleteConfirmation(dishId);
-            } else if (button.classList.contains('plan-btn')) {
-                e.stopPropagation(); openPlanModal(dishId);
-            } else if (button.classList.contains('list-btn')) {
-                e.stopPropagation(); addDishIngredientsToList(dishId);
-            } else if (button.classList.contains('info-btn')) {
-                e.stopPropagation(); openDishInfoModal(dishId);
-            }
+            if (button.classList.contains('edit-btn')) { e.stopPropagation(); editDish(dishId); } 
+            else if (button.classList.contains('delete-btn')) { e.stopPropagation(); showDeleteConfirmation(dishId); } 
+            else if (button.classList.contains('plan-btn')) { e.stopPropagation(); openPlanModal(dishId); } 
+            else if (button.classList.contains('list-btn')) { e.stopPropagation(); addDishIngredientsToList(dishId); } 
+            else if (button.classList.contains('info-btn')) { e.stopPropagation(); openDishInfoModal(dishId); }
         }
         
         function previewImage(event) {
@@ -1142,188 +784,110 @@
                     const img = new Image();
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 600; const MAX_HEIGHT = 600;
-                        let width = img.width; let height = img.height;
-                        if (width > height) {
-                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                        } else {
-                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                        }
-                        canvas.width = width; canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
+                        const MAX_WIDTH = 600; const MAX_HEIGHT = 600; let width = img.width; let height = img.height;
+                        if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
+                        else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
+                        canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
                         currentImageData = canvas.toDataURL('image/jpeg', 0.6);
-                        document.getElementById('imagePreview').src = currentImageData;
-                        document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                        document.getElementById('imagePreview').src = currentImageData; document.getElementById('imagePreviewContainer').classList.remove('hidden');
                         imageRemoved = false;
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+                    }; img.src = e.target.result;
+                }; reader.readAsDataURL(file);
             }
         }
         
-        function removeImage() {
-            currentImageData = null;
-            document.getElementById('dishImage').value = '';
-            document.getElementById('imagePreviewContainer').classList.add('hidden');
-            imageRemoved = true;
-            showToast('Imagen eliminada');
-        }
+        function removeImage() { currentImageData = null; document.getElementById('dishImage').value = ''; document.getElementById('imagePreviewContainer').classList.add('hidden'); imageRemoved = true; showToast('Imagen eliminada'); }
         
         function handleDishSubmit(e) {
             e.preventDefault();
-            const name = document.getElementById('dishName').value.trim();
-            const tags = document.getElementById('dishTags').value.trim();
-            const platform = document.getElementById('dishPlatform').value.trim();
-            const description = document.getElementById('dishDescription').value.trim();
-            const recipe = document.getElementById('dishRecipe').value.trim();
-            const ingredients = document.getElementById('dishIngredients').value.trim();
+            const name = document.getElementById('dishName').value.trim(); const tags = document.getElementById('dishTags').value.trim();
+            const platform = document.getElementById('dishPlatform').value.trim(); const description = document.getElementById('dishDescription').value.trim();
+            const recipe = document.getElementById('dishRecipe').value.trim(); const ingredients = document.getElementById('dishIngredients').value.trim();
             
             const types = [];
             if (document.getElementById('dishTypeComida').checked) types.push('comida');
             if (document.getElementById('dishTypeCena').checked) types.push('cena');
             if (document.getElementById('dishTypePostre').checked) types.push('postre');
             
-            if (!name || types.length === 0) {
-                showToast('Por favor, completa el nombre y selecciona al menos un tipo de plato'); return;
-            }
-            
+            if (!name || types.length === 0) { showToast('Por favor, completa el nombre y el tipo de plato'); return; }
             if (editingDishId) updateDish(editingDishId, name, tags, platform, types, description, recipe, ingredients);
             else addNewDish(name, tags, platform, types, description, recipe, ingredients);
         }
         
         async function addNewDish(name, tags, platform, types, description, recipe, ingredients) {
-            const newDish = {
-                id: Date.now(), name, tags: tags || '', platform: platform || '',
-                types, description: description || '', recipe: recipe || '', ingredients: ingredients || '',
-                image: currentImageData || ''
-            };
-            document.getElementById('dishForm').reset();
-            document.getElementById('dishIngredients').value = '';
-            removeImage();
-            showToast('Guardando plato...');
-            await saveDishToCloud(newDish);
-            showToast('Plato añadido correctamente');
+            const newDish = { id: Date.now(), name, tags: tags || '', platform: platform || '', types, description: description || '', recipe: recipe || '', ingredients: ingredients || '', image: currentImageData || '' };
+            document.getElementById('dishForm').reset(); document.getElementById('dishIngredients').value = ''; removeImage();
+            showToast('Guardando plato...'); await saveDishToCloud(newDish); showToast('Plato añadido correctamente');
         }
         
         async function updateDish(id, name, tags, platform, types, description, recipe, ingredients) {
             const dishIndex = dishes.findIndex(d => d.id === id);
             if (dishIndex !== -1) {
                 let finalImage = dishes[dishIndex].image;
-                if (imageRemoved) finalImage = '';
-                else if (currentImageData !== null) finalImage = currentImageData;
-                
-                const updatedDish = {
-                    ...dishes[dishIndex], name, tags: tags || '', platform: platform || '',
-                    types, description: description || '', recipe: recipe || '', ingredients: ingredients || '', image: finalImage
-                };
-                
-                cancelEdit();
-                showToast('Actualizando plato...');
-                await saveDishToCloud(updatedDish);
-                showToast('Plato actualizado correctamente');
+                if (imageRemoved) finalImage = ''; else if (currentImageData !== null) finalImage = currentImageData;
+                const updatedDish = { ...dishes[dishIndex], name, tags: tags || '', platform: platform || '', types, description: description || '', recipe: recipe || '', ingredients: ingredients || '', image: finalImage };
+                cancelEdit(); showToast('Actualizando plato...'); await saveDishToCloud(updatedDish); showToast('Plato actualizado correctamente');
             }
         }
         
         function editDish(dishId) {
-            const dish = dishes.find(d => d.id === dishId);
-            if (!dish) return;
+            const dish = dishes.find(d => d.id === dishId); if (!dish) return;
             editingDishId = dishId; imageRemoved = false;
-            
-            document.getElementById('dishName').value = dish.name;
-            document.getElementById('dishTags').value = dish.tags || '';
-            document.getElementById('dishPlatform').value = dish.platform || '';
-            document.getElementById('dishDescription').value = dish.description;
-            document.getElementById('dishRecipe').value = dish.recipe || '';
-            document.getElementById('dishIngredients').value = dish.ingredients || '';
+            document.getElementById('dishName').value = dish.name; document.getElementById('dishTags').value = dish.tags || '';
+            document.getElementById('dishPlatform').value = dish.platform || ''; document.getElementById('dishDescription').value = dish.description;
+            document.getElementById('dishRecipe').value = dish.recipe || ''; document.getElementById('dishIngredients').value = dish.ingredients || '';
             document.getElementById('editingDishId').value = dishId;
             document.getElementById('dishTypeComida').checked = dish.types.includes('comida');
             document.getElementById('dishTypeCena').checked = dish.types.includes('cena');
             document.getElementById('dishTypePostre').checked = dish.types.includes('postre');
             
-            if (dish.image) {
-                currentImageData = dish.image;
-                document.getElementById('imagePreview').src = dish.image;
-                document.getElementById('imagePreviewContainer').classList.remove('hidden');
-            } else { removeImage(); }
+            if (dish.image) { currentImageData = dish.image; document.getElementById('imagePreview').src = dish.image; document.getElementById('imagePreviewContainer').classList.remove('hidden'); } 
+            else { removeImage(); }
             
-            document.getElementById('formTitle').textContent = 'Editar Plato';
-            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save mr-2"></i>Actualizar Plato';
-            document.getElementById('cancelBtn').classList.remove('hidden');
-            document.querySelector('.dish-form-section').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('formTitle').textContent = 'Editar Plato'; document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save mr-2"></i>Actualizar Plato';
+            document.getElementById('cancelBtn').classList.remove('hidden'); document.querySelector('.dish-form-section').scrollIntoView({ behavior: 'smooth' });
         }
         
         function cancelEdit() {
-            editingDishId = null; imageRemoved = false;
-            document.getElementById('dishForm').reset();
-            document.getElementById('editingDishId').value = '';
-            document.getElementById('dishTags').value = '';
-            removeImage();
-            document.getElementById('formTitle').textContent = 'Añadir Nuevo Plato';
-            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save mr-2"></i>Añadir Plato';
+            editingDishId = null; imageRemoved = false; document.getElementById('dishForm').reset();
+            document.getElementById('editingDishId').value = ''; document.getElementById('dishTags').value = ''; removeImage();
+            document.getElementById('formTitle').textContent = 'Añadir Nuevo Plato'; document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save mr-2"></i>Añadir Plato';
             document.getElementById('cancelBtn').classList.add('hidden');
         }
         
         function renderDishesByType() {
-            const comidasContainer = document.getElementById('comidasContainer');
-            const cenasContainer = document.getElementById('cenasContainer');
-            const postresContainer = document.getElementById('postresContainer');
+            const comidasContainer = document.getElementById('comidasContainer'); const cenasContainer = document.getElementById('cenasContainer'); const postresContainer = document.getElementById('postresContainer');
             const searchQuery = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase().trim() : '';
-            
             comidasContainer.innerHTML = ''; cenasContainer.innerHTML = ''; postresContainer.innerHTML = '';
             
             let filteredDishes = [...dishes];
-            if (searchQuery) {
-                filteredDishes = filteredDishes.filter(dish => 
-                    dish.name.toLowerCase().includes(searchQuery) ||
-                    (dish.tags && dish.tags.toLowerCase().includes(searchQuery)) ||
-                    (dish.ingredients && dish.ingredients.toLowerCase().includes(searchQuery)) ||
-                    (dish.description && dish.description.toLowerCase().includes(searchQuery))
-                );
-            }
+            if (searchQuery) { filteredDishes = filteredDishes.filter(dish => dish.name.toLowerCase().includes(searchQuery) || (dish.tags && dish.tags.toLowerCase().includes(searchQuery)) || (dish.ingredients && dish.ingredients.toLowerCase().includes(searchQuery)) || (dish.description && dish.description.toLowerCase().includes(searchQuery))); }
             const sortedDishes = filteredDishes.sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
+            
             const comidas = sortedDishes.filter(dish => dish.types.includes('comida'));
             const cenas = sortedDishes.filter(dish => dish.types.includes('cena'));
             const postres = sortedDishes.filter(dish => dish.types.includes('postre'));
             
-            if (comidas.length === 0) {
-                comidasContainer.innerHTML = `<div class="col-span-full text-center py-12"><i class="fas ${searchQuery ? 'fa-search' : 'fa-sun'} text-6xl text-gray-300 dark:text-gray-600 mb-4"></i><p class="text-gray-500 dark:text-gray-400 text-lg">${searchQuery ? 'No se encontraron comidas.' : 'No hay comidas disponibles.'}</p></div>`;
-            } else { comidas.forEach(dish => comidasContainer.appendChild(createDishCard(dish, 'comida'))); }
-            
-            if (cenas.length === 0) {
-                cenasContainer.innerHTML = `<div class="col-span-full text-center py-12"><i class="fas ${searchQuery ? 'fa-search' : 'fa-moon'} text-6xl text-gray-300 dark:text-gray-600 mb-4"></i><p class="text-gray-500 dark:text-gray-400 text-lg">${searchQuery ? 'No se encontraron cenas.' : 'No hay cenas disponibles.'}</p></div>`;
-            } else { cenas.forEach(dish => cenasContainer.appendChild(createDishCard(dish, 'cena'))); }
-
-            if (postres.length === 0) {
-                postresContainer.innerHTML = `<div class="col-span-full text-center py-12"><i class="fas ${searchQuery ? 'fa-search' : 'fa-ice-cream'} text-6xl text-gray-300 dark:text-gray-600 mb-4"></i><p class="text-gray-500 dark:text-gray-400 text-lg">${searchQuery ? 'No se encontraron postres.' : 'No hay postres disponibles.'}</p></div>`;
-            } else { postres.forEach(dish => postresContainer.appendChild(createDishCard(dish, 'postre'))); }
+            if (comidas.length === 0) comidasContainer.innerHTML = `<div class="col-span-full text-center py-12"><i class="fas ${searchQuery ? 'fa-search' : 'fa-sun'} text-6xl text-gray-300 dark:text-gray-600 mb-4"></i><p class="text-gray-500 dark:text-gray-400 text-lg">${searchQuery ? 'No se encontraron comidas.' : 'No hay comidas disponibles.'}</p></div>`; else comidas.forEach(dish => comidasContainer.appendChild(createDishCard(dish, 'comida')));
+            if (cenas.length === 0) cenasContainer.innerHTML = `<div class="col-span-full text-center py-12"><i class="fas ${searchQuery ? 'fa-search' : 'fa-moon'} text-6xl text-gray-300 dark:text-gray-600 mb-4"></i><p class="text-gray-500 dark:text-gray-400 text-lg">${searchQuery ? 'No se encontraron cenas.' : 'No hay cenas disponibles.'}</p></div>`; else cenas.forEach(dish => cenasContainer.appendChild(createDishCard(dish, 'cena')));
+            if (postres.length === 0) postresContainer.innerHTML = `<div class="col-span-full text-center py-12"><i class="fas ${searchQuery ? 'fa-search' : 'fa-ice-cream'} text-6xl text-gray-300 dark:text-gray-600 mb-4"></i><p class="text-gray-500 dark:text-gray-400 text-lg">${searchQuery ? 'No se encontraron postres.' : 'No hay postres disponibles.'}</p></div>`; else postres.forEach(dish => postresContainer.appendChild(createDishCard(dish, 'postre')));
         }
         
         function createDishCard(dish, currentType) {
             const card = document.createElement('div');
             card.className = 'dish-card bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors';
-            card.draggable = true;
-            card.dataset.dishId = dish.id;
-            card.dataset.mealType = currentType;
+            card.draggable = true; card.dataset.dishId = dish.id; card.dataset.mealType = currentType;
             
-            const imageContainer = document.createElement('div');
-            imageContainer.className = 'relative mb-4';
-            
+            const imageContainer = document.createElement('div'); imageContainer.className = 'relative mb-4';
             if (dish.image) {
-                const img = document.createElement('img');
-                img.src = dish.image;
-                img.className = 'w-full h-40 object-cover rounded-lg';
-                imageContainer.appendChild(img);
+                const img = document.createElement('img'); img.src = dish.image; img.className = 'w-full h-40 object-cover rounded-lg'; imageContainer.appendChild(img);
             } else {
-                const placeholder = document.createElement('div');
-                placeholder.className = 'w-full h-40 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/40 dark:to-purple-900/40 rounded-lg flex items-center justify-center';
-                placeholder.innerHTML = '<i class="fas fa-utensils text-4xl text-indigo-400 dark:text-indigo-600"></i>';
+                const placeholder = document.createElement('div'); placeholder.className = 'w-full h-40 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/40 dark:to-purple-900/40 rounded-lg flex items-center justify-center';
+                placeholder.innerHTML = `<i class="fas ${currentType === 'postre' ? 'fa-ice-cream' : 'fa-utensils'} text-4xl text-indigo-400 dark:text-indigo-600"></i>`;
                 imageContainer.appendChild(placeholder);
             }
             
-            const actionButtons = document.createElement('div');
-            actionButtons.className = 'action-buttons';
+            const actionButtons = document.createElement('div'); actionButtons.className = 'action-buttons';
             actionButtons.innerHTML = `
                 <button class="action-btn info-btn no-drag" title="Ver ingredientes"><i class="fas fa-info"></i></button>
                 <button class="action-btn edit-btn no-drag" title="Editar"><i class="fas fa-edit"></i></button>
@@ -1333,32 +897,20 @@
             `;
             imageContainer.appendChild(actionButtons);
             
-            let tagsHtml = '';
-            if (dish.tags) {
-                const tagList = dish.tags.split(',').map(t => t.trim()).filter(t => t);
-                tagsHtml = `<div class="mb-2 flex flex-wrap">` + tagList.map(t => `<span class="tag-badge">${t}</span>`).join('') + `</div>`;
-            }
+            let tagsHtml = ''; if (dish.tags) { const tagList = dish.tags.split(',').map(t => t.trim()).filter(t => t); tagsHtml = `<div class="mb-2 flex flex-wrap">` + tagList.map(t => `<span class="tag-badge">${t}</span>`).join('') + `</div>`; }
             
-            // Lógica para la etiqueta del tipo de comida
-            let badgeText = 'Varios';
-            let badgeIcon = 'utensils';
-            let badgeClass = 'varios';
-
-            if (dish.types.length === 1) {
-                badgeClass = dish.types[0];
-                if (dish.types[0] === 'comida') { badgeText = 'Comida'; badgeIcon = 'sun'; }
-                else if (dish.types[0] === 'cena') { badgeText = 'Cena'; badgeIcon = 'moon'; }
-                else if (dish.types[0] === 'postre') { badgeText = 'Postre'; badgeIcon = 'ice-cream'; }
-            }
+            let badgeIcon = 'utensils'; let badgeText = 'Ambos'; let badgeClass = 'ambos';
+            if(dish.types.length === 1) {
+                if(dish.types[0] === 'comida') { badgeIcon = 'sun'; badgeText = 'Comida'; badgeClass = 'comida'; }
+                else if(dish.types[0] === 'cena') { badgeIcon = 'moon'; badgeText = 'Cena'; badgeClass = 'cena'; }
+                else if(dish.types[0] === 'postre') { badgeIcon = 'ice-cream'; badgeText = 'Postre'; badgeClass = 'postre'; }
+            } else if (dish.types.includes('postre')) { badgeText = 'Varios'; }
             
             const content = document.createElement('div');
             content.innerHTML = `
                 <div class="flex items-start justify-between mb-2">
                     <h3 class="font-bold text-lg text-gray-800 dark:text-white">${dish.name}</h3>
-                    <span class="meal-type-badge meal-type-${badgeClass}">
-                        <i class="fas fa-${badgeIcon} mr-1"></i>
-                        ${badgeText}
-                    </span>
+                    <span class="meal-type-badge meal-type-${badgeClass}"><i class="fas fa-${badgeIcon} mr-1"></i>${badgeText}</span>
                 </div>
                 ${tagsHtml}
                 ${dish.platform ? `<div class="platform-badge bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"><i class="fas fa-globe"></i> ${dish.platform}</div>` : ''}
@@ -1366,49 +918,31 @@
                 ${dish.recipe ? `<a href="${dish.recipe}" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline text-sm font-medium inline-block mt-2"><i class="fas fa-external-link-alt mr-1"></i>Ver receta</a>` : ''}
             `;
             
-            card.appendChild(imageContainer);
-            card.appendChild(content);
-            card.addEventListener('dragstart', handleDragStart);
-            card.addEventListener('dragend', handleDragEnd);
-            return card;
+            card.appendChild(imageContainer); card.appendChild(content);
+            card.addEventListener('dragstart', handleDragStart); card.addEventListener('dragend', handleDragEnd); return card;
         }
 
-        // CALENDAR FUNCTIONS
         function navigateWeek(direction) { currentWeekOffset += direction; updateWeekDisplay(); renderWeeklyCalendar(); }
         function goToCurrentWeek() { currentWeekOffset = 0; updateWeekDisplay(); renderWeeklyCalendar(); }
         
         function updateWeekDisplay() {
-            const weekRange = getWeekRange(currentWeekOffset);
-            document.getElementById('weekRange').textContent = weekRange;
-            document.getElementById('prevWeekBtn').disabled = currentWeekOffset <= -52;
-            document.getElementById('nextWeekBtn').disabled = currentWeekOffset >= 52;
+            const weekRange = getWeekRange(currentWeekOffset); document.getElementById('weekRange').textContent = weekRange;
+            document.getElementById('prevWeekBtn').disabled = currentWeekOffset <= -52; document.getElementById('nextWeekBtn').disabled = currentWeekOffset >= 52;
         }
         
         function getWeekRange(weekOffset) {
-            const today = new Date();
-            const currentWeekStart = new Date(today);
-            const daysToMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
-            currentWeekStart.setDate(today.getDate() - daysToMonday + (weekOffset * 7));
-            const weekEnd = new Date(currentWeekStart); weekEnd.setDate(weekEnd.getDate() + 6);
+            const today = new Date(); const currentWeekStart = new Date(today); const daysToMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
+            currentWeekStart.setDate(today.getDate() - daysToMonday + (weekOffset * 7)); const weekEnd = new Date(currentWeekStart); weekEnd.setDate(weekEnd.getDate() + 6);
             return weekOffset === 0 ? 'Semana actual' : `${currentWeekStart.toLocaleDateString('es-ES', {day:'numeric',month:'short'})} - ${weekEnd.toLocaleDateString('es-ES', {day:'numeric',month:'short'})}`;
         }
         
         function getCurrentWeekDates() {
-            const today = new Date();
-            const daysToMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
-            const currentWeekStart = new Date(today);
-            currentWeekStart.setDate(today.getDate() - daysToMonday + (currentWeekOffset * 7));
-            const weekDates = [];
-            for (let i = 0; i < 7; i++) {
-                const d = new Date(currentWeekStart); d.setDate(currentWeekStart.getDate() + i); weekDates.push(d);
-            }
-            return weekDates;
+            const today = new Date(); const daysToMonday = today.getDay() === 0 ? 6 : today.getDay() - 1; const currentWeekStart = new Date(today);
+            currentWeekStart.setDate(today.getDate() - daysToMonday + (currentWeekOffset * 7)); const weekDates = [];
+            for (let i = 0; i < 7; i++) { const d = new Date(currentWeekStart); d.setDate(currentWeekStart.getDate() + i); weekDates.push(d); } return weekDates;
         }
         
-        function formatDateKey(date) {
-            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-        }
-        
+        function formatDateKey(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
         function clearWeek() { document.getElementById('clearWeekModal').style.display = 'block'; }
         function closeClearWeekModal() { document.getElementById('clearWeekModal').style.display = 'none'; }
         
@@ -1416,95 +950,58 @@
             const weekDates = getCurrentWeekDates();
             weekDates.forEach(date => {
                 const dateKey = formatDateKey(date);
-                mealTypes.forEach(mealType => {
-                    const slotKey = `${dateKey}-${mealType}`;
-                    delete weeklyPlan[slotKey];
-                    delete weeklyNotes[slotKey];
-                });
+                mealTypes.forEach(mealType => { const slotKey = `${dateKey}-${mealType}`; delete weeklyPlan[slotKey]; delete weeklyNotes[slotKey]; });
                 delete dishPlans[dateKey];
             });
-            savePlanningToCloud(); renderWeeklyCalendar(); closeClearWeekModal();
-            showToast('Semana limpiada correctamente');
+            savePlanningToCloud(); renderWeeklyCalendar(); closeClearWeekModal(); showToast('Semana limpiada correctamente');
         }
 
-        // SORPRÉNDEME
         function fillRandomWeek() {
-            const weekDates = getCurrentWeekDates();
-            let changed = false;
-            
+            const weekDates = getCurrentWeekDates(); let changed = false;
             weekDates.forEach(date => {
                 const dateKey = formatDateKey(date);
                 mealTypes.forEach(mealType => {
-                    const slotKey = `${dateKey}-${mealType}`;
-                    const currentDishesInSlot = weeklyPlan[slotKey] || [];
-                    
+                    const slotKey = `${dateKey}-${mealType}`; const currentDishesInSlot = weeklyPlan[slotKey] || [];
                     if (currentDishesInSlot.length === 0) {
                         const availableDishes = dishes.filter(d => d.types.includes(mealType));
                         if (availableDishes.length > 0) {
                             const randomDish = availableDishes[Math.floor(Math.random() * availableDishes.length)];
-                            weeklyPlan[slotKey] = [randomDish.id];
-                            if(!dishPlans[dateKey]) dishPlans[dateKey] = {};
-                            dishPlans[dateKey][mealType] = [randomDish.id];
-                            changed = true;
+                            weeklyPlan[slotKey] = [randomDish.id]; if(!dishPlans[dateKey]) dishPlans[dateKey] = {}; dishPlans[dateKey][mealType] = [randomDish.id]; changed = true;
                         }
                     }
                 });
             });
-            
-            if (changed) { renderWeeklyCalendar(); savePlanningToCloud(); showToast('¡Semana rellenada mágicamente!'); } 
-            else { showToast('No hay huecos libres o faltan platos para asignar.'); }
+            if (changed) { renderWeeklyCalendar(); savePlanningToCloud(); showToast('¡Semana rellenada mágicamente!'); } else { showToast('No hay huecos libres o faltan platos para asignar.'); }
         }
         
         function renderWeeklyCalendar() {
-            const container = document.querySelector('.calendar-grid');
-            if(!container) return; container.innerHTML = '';
-            const weekDates = getCurrentWeekDates();
-            daysOfWeek.forEach((day, index) => {
-                container.appendChild(createDayCard(day, weekDates[index]));
-            });
+            const container = document.querySelector('.calendar-grid'); if(!container) return; container.innerHTML = '';
+            const weekDates = getCurrentWeekDates(); daysOfWeek.forEach((day, index) => { container.appendChild(createDayCard(day, weekDates[index])); });
         }
         
         function createDayCard(day, date) {
-            const card = document.createElement('div');
-            card.className = 'bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-indigo-900/20 rounded-xl p-6 border dark:border-gray-700';
+            const card = document.createElement('div'); card.className = 'bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-indigo-900/20 rounded-xl p-6 border dark:border-gray-700';
             card.innerHTML = `
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold text-xl text-gray-800 dark:text-white">${day}</h3>
-                    <span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">${date.getDate()}</span>
+                    <h3 class="font-bold text-xl text-gray-800 dark:text-white">${day}</h3><span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">${date.getDate()}</span>
                 </div>
-                <div class="space-y-4">
-                    ${mealTypes.map(mealType => createMealSlotHTML(day, date, mealType)).join('')}
-                </div>
+                <div class="space-y-4">${mealTypes.map(mealType => createMealSlotHTML(day, date, mealType)).join('')}</div>
             `;
             return card;
         }
         
         function createMealSlotHTML(day, date, mealType) {
-            const dateKey = formatDateKey(date);
-            const slotKey = `${dateKey}-${mealType}`;
-            const dishIds = weeklyPlan[slotKey] || [];
-            
-            let slotIcon = 'sun';
-            if (mealType === 'cena') slotIcon = 'moon';
-            if (mealType === 'postre') slotIcon = 'ice-cream';
-            
+            const dateKey = formatDateKey(date); const slotKey = `${dateKey}-${mealType}`; const dishIds = weeklyPlan[slotKey] || [];
             let innerCardsHtml = '';
             if (dishIds.length > 0) {
                 innerCardsHtml = dishIds.map(dishId => {
-                    const dish = dishes.find(d => d.id === dishId);
-                    if (!dish) return '';
+                    const dish = dishes.find(d => d.id === dishId); if (!dish) return '';
                     return `
                         <div class="bg-white dark:bg-gray-700 rounded-lg p-3 shadow-sm cursor-grab active:cursor-grabbing dish-inner-card relative group mb-3 border dark:border-gray-600" draggable="true" ondragstart="handlePlannedDragStart(event, '${slotKey}', ${dish.id}, '${mealType}')" ondragend="handleDragEnd(event)">
                             <div class="card-actions absolute top-2 right-2 flex gap-1 z-10 no-print">
-                                <button onclick="event.stopPropagation(); openDishInfoModal(${dish.id})" class="text-sky-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-sky-50" title="Ver ingredientes">
-                                    <i class="fas fa-info text-xs"></i>
-                                </button>
-                                <button onclick="event.stopPropagation(); openMoveModal('${slotKey}', ${dish.id})" class="text-indigo-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-indigo-50" title="Replanificar/Mover">
-                                    <i class="fas fa-calendar-day text-xs"></i>
-                                </button>
-                                <button onclick="event.stopPropagation(); removeFromSlot('${slotKey}', ${dish.id})" class="text-red-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-red-50" title="Quitar plato">
-                                    <i class="fas fa-times text-xs"></i>
-                                </button>
+                                <button onclick="event.stopPropagation(); openDishInfoModal(${dish.id})" class="text-sky-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-sky-50" title="Ver ingredientes"><i class="fas fa-info text-xs"></i></button>
+                                <button onclick="event.stopPropagation(); openMoveModal('${slotKey}', ${dish.id})" class="text-indigo-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-indigo-50" title="Replanificar/Mover"><i class="fas fa-calendar-day text-xs"></i></button>
+                                <button onclick="event.stopPropagation(); removeFromSlot('${slotKey}', ${dish.id})" class="text-red-500 bg-white dark:bg-gray-800 rounded-full w-7 h-7 shadow border dark:border-gray-600 flex items-center justify-center hover:bg-red-50" title="Quitar plato"><i class="fas fa-times text-xs"></i></button>
                             </div>
                             ${dish.image ? `<img src="${dish.image}" class="w-full h-20 object-cover rounded mb-2 pointer-events-none">` : ''}
                             <h4 class="font-semibold text-sm text-gray-800 dark:text-white pr-20 pointer-events-none leading-tight">${dish.name}</h4>
@@ -1513,38 +1010,17 @@
                         </div>
                     `;
                 }).join('');
-                
-                // Botón añadir otro plato
-                innerCardsHtml += `
-                    <div class="text-center py-2 opacity-60 cursor-pointer hover:opacity-100 transition-all border border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-indigo-400 no-print" onclick="openSelectDishModal('${slotKey}')">
-                        <i class="fas fa-plus text-lg text-indigo-400 dark:text-indigo-500"></i>
-                    </div>
-                `;
+                innerCardsHtml += `<div class="text-center py-2 opacity-60 cursor-pointer hover:opacity-100 transition-all border border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-indigo-400 no-print" onclick="openSelectDishModal('${slotKey}')"><i class="fas fa-plus text-lg text-indigo-400 dark:text-indigo-500"></i></div>`;
             } else {
-                innerCardsHtml = `
-                    <div class="text-center py-4 opacity-70 cursor-pointer hover:opacity-100 transition-all bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 hover:border-indigo-400 no-print" onclick="openSelectDishModal('${slotKey}')">
-                        <i class="fas fa-plus-circle text-2xl text-indigo-400 dark:text-indigo-500 mb-2 mt-1"></i>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 px-2 font-medium pb-1">Añadir plato</p>
-                    </div>
-                `;
+                innerCardsHtml = `<div class="text-center py-4 opacity-70 cursor-pointer hover:opacity-100 transition-all bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 hover:border-indigo-400 no-print" onclick="openSelectDishModal('${slotKey}')"><i class="fas fa-plus-circle text-2xl text-indigo-400 dark:text-indigo-500 mb-2 mt-1"></i><p class="text-xs text-gray-500 dark:text-gray-400 px-2 font-medium pb-1">Añadir plato</p></div>`;
             }
-
             return `
-                <div class="meal-slot bg-white/70 dark:bg-gray-800/70 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-3" 
-                     data-slot-id="${slotKey}" data-date-key="${dateKey}" data-meal-type="${mealType}"
-                     ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
-                    
+                <div class="meal-slot bg-white/70 dark:bg-gray-800/70 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-3" data-slot-id="${slotKey}" data-date-key="${dateKey}" data-meal-type="${mealType}" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
                     <div class="flex justify-between items-center mb-3 px-1">
-                        <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 capitalize flex items-center">
-                            <i class="fas fa-${slotIcon} mr-2 text-indigo-600 dark:text-indigo-400"></i> ${mealType}
-                        </span>
+                        <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 capitalize flex items-center"><i class="fas fa-${mealType === 'comida' ? 'sun' : 'moon'} mr-2 text-indigo-600 dark:text-indigo-400"></i> ${mealType}</span>
                         <div class="flex gap-2 no-print">
-                            <button onclick="openSelectDishModal('${slotKey}')" class="text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300" title="Añadir plato de la lista">
-                                <i class="fas fa-plus-circle"></i>
-                            </button>
-                            <button onclick="openNotesModal('${slotKey}')" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300" title="Notas para esta comida">
-                                <i class="${weeklyNotes[slotKey] ? 'fas fa-sticky-note text-yellow-500' : 'far fa-sticky-note'}"></i>
-                            </button>
+                            <button onclick="openSelectDishModal('${slotKey}')" class="text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300" title="Añadir plato de la lista"><i class="fas fa-plus-circle"></i></button>
+                            <button onclick="openNotesModal('${slotKey}')" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300" title="Notas para esta comida"><i class="${weeklyNotes[slotKey] ? 'fas fa-sticky-note text-yellow-500' : 'far fa-sticky-note'}"></i></button>
                         </div>
                     </div>
                     ${innerCardsHtml}
@@ -1552,220 +1028,90 @@
             `;
         }
         
-        function handlePlannedDragStart(e, slotKey, dishId, mealType) {
-            draggedDishId = dishId; draggedMealType = mealType; draggedSourceSlot = slotKey;
-            e.dataTransfer.setData('text/plain', JSON.stringify({ dishId, mealType, sourceSlot: slotKey }));
-            e.target.classList.add('dragging');
-        }
-
-        function handleDragStart(e) {
-            const dishCard = e.target.closest('.dish-card');
-            if (!dishCard) return;
-            draggedDishId = parseInt(dishCard.dataset.dishId); draggedMealType = dishCard.dataset.mealType; draggedSourceSlot = null;
-            e.dataTransfer.setData('text/plain', JSON.stringify({ dishId: draggedDishId, mealType: draggedMealType }));
-            dishCard.classList.add('dragging');
-        }
-        
-        function handleDragEnd(e) {
-            const card = e.target.closest('.dish-card') || e.target.closest('.dish-inner-card');
-            if (card) card.classList.remove('dragging');
-            draggedDishId = draggedMealType = draggedSourceSlot = null;
-        }
-        
+        function handlePlannedDragStart(e, slotKey, dishId, mealType) { draggedDishId = dishId; draggedMealType = mealType; draggedSourceSlot = slotKey; e.dataTransfer.setData('text/plain', JSON.stringify({ dishId, mealType, sourceSlot: slotKey })); e.target.classList.add('dragging'); }
+        function handleDragStart(e) { const dishCard = e.target.closest('.dish-card'); if (!dishCard) return; draggedDishId = parseInt(dishCard.dataset.dishId); draggedMealType = dishCard.dataset.mealType; draggedSourceSlot = null; e.dataTransfer.setData('text/plain', JSON.stringify({ dishId: draggedDishId, mealType: draggedMealType })); dishCard.classList.add('dragging'); }
+        function handleDragEnd(e) { const card = e.target.closest('.dish-card') || e.target.closest('.dish-inner-card'); if (card) card.classList.remove('dragging'); draggedDishId = draggedMealType = draggedSourceSlot = null; }
         function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); return false; }
         function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
         
         function handleDrop(e) {
-            if (e.stopPropagation) e.stopPropagation();
-            e.currentTarget.classList.remove('drag-over');
+            if (e.stopPropagation) e.stopPropagation(); e.currentTarget.classList.remove('drag-over');
             const slotId = e.currentTarget.dataset.slotId; const dateKey = e.currentTarget.dataset.dateKey; const slotMealType = e.currentTarget.dataset.mealType;
-            
             let dishId, mealType, sourceSlot;
-            try {
-                const dragData = JSON.parse(e.dataTransfer.getData('text/plain'));
-                dishId = dragData.dishId; mealType = dragData.mealType; sourceSlot = dragData.sourceSlot;
-            } catch (error) {
-                dishId = draggedDishId; mealType = draggedMealType; sourceSlot = draggedSourceSlot;
-            }
+            try { const dragData = JSON.parse(e.dataTransfer.getData('text/plain')); dishId = dragData.dishId; mealType = dragData.mealType; sourceSlot = dragData.sourceSlot; } catch (error) { dishId = draggedDishId; mealType = draggedMealType; sourceSlot = draggedSourceSlot; }
             if (!dishId) { showToast('Error al arrastrar'); return false; }
-            const dish = dishes.find(d => d.id === dishId);
-            if (!dish) { showToast('El plato no existe'); return false; }
-            if (!dish.types.includes(slotMealType)) { showToast(`Uso exclusivo para: ${dish.types.join(', ')}`); return false; }
-            
-            if (sourceSlot && sourceSlot !== slotId) {
-                const srcArr = weeklyPlan[sourceSlot];
-                const idx = srcArr.indexOf(dishId);
-                if (idx > -1) {
-                    srcArr.splice(idx, 1);
-                    if (srcArr.length === 0) delete weeklyPlan[sourceSlot];
-                }
-            }
-            
-            if (!weeklyPlan[slotId]) weeklyPlan[slotId] = [];
-            if (!weeklyPlan[slotId].includes(dishId)) weeklyPlan[slotId].push(dishId);
-            
-            renderWeeklyCalendar(); savePlanningToCloud();
-            return false;
+            const dish = dishes.find(d => d.id === dishId); if (!dish) { showToast('El plato no existe'); return false; }
+            if (!dish.types.includes(slotMealType)) { showToast(`Uso exclusivo para: ${dish.types.join(' y ')}`); return false; }
+            if (sourceSlot && sourceSlot !== slotId) { const srcArr = weeklyPlan[sourceSlot]; const idx = srcArr.indexOf(dishId); if (idx > -1) { srcArr.splice(idx, 1); if (srcArr.length === 0) delete weeklyPlan[sourceSlot]; } }
+            if (!weeklyPlan[slotId]) weeklyPlan[slotId] = []; if (!weeklyPlan[slotId].includes(dishId)) weeklyPlan[slotId].push(dishId);
+            renderWeeklyCalendar(); savePlanningToCloud(); return false;
         }
         
         function showDeleteConfirmation(dishId) { dishToDelete = dishId; document.getElementById('confirmModal').style.display = 'block'; }
         function closeModal() { document.getElementById('confirmModal').style.display = 'none'; dishToDelete = null; }
         
         async function confirmDelete() {
-            if (dishToDelete === null) return;
-            const dishIdToRemove = dishToDelete;
-            dishes = dishes.filter(d => d.id !== dishIdToRemove);
-            
-            Object.keys(weeklyPlan).forEach(slotKey => {
-                const arr = weeklyPlan[slotKey];
-                const idx = arr.indexOf(dishIdToRemove);
-                if (idx > -1) {
-                    arr.splice(idx, 1);
-                    if (arr.length === 0) { delete weeklyPlan[slotKey]; delete weeklyNotes[slotKey]; }
-                }
-            });
-            
+            if (dishToDelete === null) return; const dishIdToRemove = dishToDelete; dishes = dishes.filter(d => d.id !== dishIdToRemove);
+            Object.keys(weeklyPlan).forEach(slotKey => { const arr = weeklyPlan[slotKey]; const idx = arr.indexOf(dishIdToRemove); if (idx > -1) { arr.splice(idx, 1); if (arr.length === 0) { delete weeklyPlan[slotKey]; delete weeklyNotes[slotKey]; } } });
             if (editingDishId === dishIdToRemove) cancelEdit();
-            renderDishesByType(); renderWeeklyCalendar(); closeModal();
-            showToast('Eliminando plato...');
-            await deleteDishFromCloud(dishIdToRemove); await savePlanningToCloud();
+            renderDishesByType(); renderWeeklyCalendar(); closeModal(); showToast('Eliminando plato...'); await deleteDishFromCloud(dishIdToRemove); await savePlanningToCloud();
         }
         
         function removeFromSlot(slotKey, dishId) {
-            const arr = weeklyPlan[slotKey];
-            if (arr) {
-                const idx = arr.indexOf(dishId);
-                if (idx > -1) {
-                    arr.splice(idx, 1);
-                    if (arr.length === 0) {
-                        delete weeklyPlan[slotKey];
-                        delete weeklyNotes[slotKey];
-                    }
-                }
-            }
+            const arr = weeklyPlan[slotKey]; if (arr) { const idx = arr.indexOf(dishId); if (idx > -1) { arr.splice(idx, 1); if (arr.length === 0) { delete weeklyPlan[slotKey]; delete weeklyNotes[slotKey]; } } }
             renderWeeklyCalendar(); savePlanningToCloud(); showToast('Plato quitado');
         }
 
         // -- MODAL INFORMACIÓN DEL PLATO --
         function openDishInfoModal(dishId) {
-            const dish = dishes.find(d => d.id === dishId);
-            if (!dish) return;
-            
-            document.getElementById('infoDishName').textContent = dish.name;
-            const ingredientsDiv = document.getElementById('infoDishIngredients');
-            
-            if (dish.ingredients && dish.ingredients.trim() !== '') {
-                const items = dish.ingredients.split(/[,;\n]+/).map(i => i.trim()).filter(i => i);
-                ingredientsDiv.innerHTML = `<ul class="list-disc pl-5 space-y-1">` + 
-                    items.map(i => `<li>${i}</li>`).join('') + 
-                    `</ul>`;
-            } else {
-                ingredientsDiv.innerHTML = '<p class="italic text-gray-400">No hay ingredientes especificados para este plato.</p>';
-            }
-            
+            const dish = dishes.find(d => d.id === dishId); if (!dish) return;
+            document.getElementById('infoDishName').textContent = dish.name; const ingredientsDiv = document.getElementById('infoDishIngredients');
+            if (dish.ingredients && dish.ingredients.trim() !== '') { const items = dish.ingredients.split(/[,;\n]+/).map(i => i.trim()).filter(i => i); ingredientsDiv.innerHTML = `<ul class="list-disc pl-5 space-y-1">` + items.map(i => `<li>${i}</li>`).join('') + `</ul>`; } 
+            else { ingredientsDiv.innerHTML = '<p class="italic text-gray-400">No hay ingredientes especificados para este plato.</p>'; }
             document.getElementById('dishInfoModal').style.display = 'block';
         }
-
-        function closeDishInfoModal() {
-            document.getElementById('dishInfoModal').style.display = 'none';
-        }
+        function closeDishInfoModal() { document.getElementById('dishInfoModal').style.display = 'none'; }
 
         // -- MODAL SELECCIONAR PLATO (DESDE CALENDARIO) --
         function openSelectDishModal(slotKey) {
-            targetSlotForSelection = slotKey;
-            document.getElementById('searchDishForSlotInput').value = '';
-            
-            const mealType = slotKey.split('-').pop();
-            document.getElementById('selectDishTargetText').textContent = mealType;
-            
-            renderDishesForSelection();
-            document.getElementById('selectDishModal').style.display = 'block';
+            targetSlotForSelection = slotKey; document.getElementById('searchDishForSlotInput').value = '';
+            const mealType = slotKey.split('-').pop(); document.getElementById('selectDishTargetText').textContent = mealType;
+            renderDishesForSelection(); document.getElementById('selectDishModal').style.display = 'block';
         }
-
-        function closeSelectDishModal() {
-            document.getElementById('selectDishModal').style.display = 'none';
-            targetSlotForSelection = null;
-        }
-
+        function closeSelectDishModal() { document.getElementById('selectDishModal').style.display = 'none'; targetSlotForSelection = null; }
+        
         function renderDishesForSelection() {
-            if (!targetSlotForSelection) return;
-            const mealType = targetSlotForSelection.split('-').pop();
-            const searchQuery = document.getElementById('searchDishForSlotInput').value.toLowerCase().trim();
-            const grid = document.getElementById('selectDishGrid');
-            grid.innerHTML = '';
-            
+            if (!targetSlotForSelection) return; const mealType = targetSlotForSelection.split('-').pop(); const searchQuery = document.getElementById('searchDishForSlotInput').value.toLowerCase().trim();
+            const grid = document.getElementById('selectDishGrid'); grid.innerHTML = '';
             let availableDishes = dishes.filter(d => d.types.includes(mealType));
-            if (searchQuery) {
-                availableDishes = availableDishes.filter(d => 
-                    d.name.toLowerCase().includes(searchQuery) ||
-                    (d.tags && d.tags.toLowerCase().includes(searchQuery))
-                );
-            }
-            
-            if (availableDishes.length === 0) {
-                grid.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 py-8">No hay platos disponibles o no coinciden con tu búsqueda.</p>';
-                return;
-            }
-            
+            if (searchQuery) { availableDishes = availableDishes.filter(d => d.name.toLowerCase().includes(searchQuery) || (d.tags && d.tags.toLowerCase().includes(searchQuery))); }
+            if (availableDishes.length === 0) { grid.innerHTML = '<p class="text-center text-gray-500 dark:text-gray-400 py-8">No hay platos disponibles o no coinciden con tu búsqueda.</p>'; return; }
             availableDishes.sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })).forEach(dish => {
-                const el = document.createElement('div');
-                el.className = 'flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl mb-3 cursor-pointer hover:border-indigo-500 hover:shadow-md transition-all';
-                el.onclick = () => selectDishFromList(dish.id);
-                
-                const imgHtml = dish.image 
-                    ? `<img src="${dish.image}" class="w-16 h-16 object-cover rounded-lg shrink-0">` 
-                    : `<div class="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg flex items-center justify-center shrink-0"><i class="fas fa-utensils text-indigo-400"></i></div>`;
-                
-                el.innerHTML = `
-                    ${imgHtml}
-                    <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-gray-800 dark:text-white truncate leading-tight">${dish.name}</h4>
-                        ${dish.tags ? `<p class="text-xs text-indigo-500 truncate mt-1">${dish.tags}</p>` : ''}
-                    </div>
-                    <div class="shrink-0 text-indigo-500 hover:text-indigo-700"><i class="fas fa-plus-circle text-2xl"></i></div>
-                `;
+                const el = document.createElement('div'); el.className = 'flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl mb-3 cursor-pointer hover:border-indigo-500 hover:shadow-md transition-all'; el.onclick = () => selectDishFromList(dish.id);
+                const imgHtml = dish.image ? `<img src="${dish.image}" class="w-16 h-16 object-cover rounded-lg shrink-0">` : `<div class="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/40 rounded-lg flex items-center justify-center shrink-0"><i class="fas fa-utensils text-indigo-400"></i></div>`;
+                el.innerHTML = `${imgHtml}<div class="flex-1 min-w-0"><h4 class="font-bold text-gray-800 dark:text-white truncate leading-tight">${dish.name}</h4>${dish.tags ? `<p class="text-xs text-indigo-500 truncate mt-1">${dish.tags}</p>` : ''}</div><div class="shrink-0 text-indigo-500 hover:text-indigo-700"><i class="fas fa-plus-circle text-2xl"></i></div>`;
                 grid.appendChild(el);
             });
         }
 
         async function selectDishFromList(dishId) {
-            if (!targetSlotForSelection) return;
-            const slotKey = targetSlotForSelection;
-            const parts = slotKey.split('-');
-            const mealType = parts.pop();
-            const dateKey = parts.join('-');
-
-            if (!weeklyPlan[slotKey]) weeklyPlan[slotKey] = [];
-            if (!weeklyPlan[slotKey].includes(dishId)) weeklyPlan[slotKey].push(dishId);
-            
-            if (!dishPlans[dateKey]) dishPlans[dateKey] = {};
-            if (!dishPlans[dateKey][mealType]) dishPlans[dateKey][mealType] = [];
-            if (!dishPlans[dateKey][mealType].includes(dishId)) dishPlans[dateKey][mealType].push(dishId);
-
-            renderWeeklyCalendar();
-            await savePlanningToCloud();
-            closeSelectDishModal();
-            showToast('Plato añadido correctamente');
+            if (!targetSlotForSelection) return; const slotKey = targetSlotForSelection; const parts = slotKey.split('-'); const mealType = parts.pop(); const dateKey = parts.join('-');
+            if (!weeklyPlan[slotKey]) weeklyPlan[slotKey] = []; if (!weeklyPlan[slotKey].includes(dishId)) weeklyPlan[slotKey].push(dishId);
+            if (!dishPlans[dateKey]) dishPlans[dateKey] = {}; if (!dishPlans[dateKey][mealType]) dishPlans[dateKey][mealType] = []; if (!dishPlans[dateKey][mealType].includes(dishId)) dishPlans[dateKey][mealType].push(dishId);
+            renderWeeklyCalendar(); await savePlanningToCloud(); closeSelectDishModal(); showToast('Plato añadido correctamente');
         }
 
         // -- MODAL REPLANIFICAR --
         function openMoveModal(slotKey, dishId) {
-            movingSlotKey = slotKey; movingDishId = dishId;
-            const dish = dishes.find(d => d.id === dishId);
-            if (!dish) return;
-            
-            document.getElementById('moveDishName').textContent = dish.name;
-            const parts = slotKey.split('-'); const currentType = parts.pop(); const dateKey = parts.join('-');
-            
-            document.getElementById('moveMealTypeComidaContainer').style.display = dish.types.includes('comida') ? 'flex' : 'none';
-            document.getElementById('moveMealTypeCenaContainer').style.display = dish.types.includes('cena') ? 'flex' : 'none';
-            
+            movingSlotKey = slotKey; movingDishId = dishId; const dish = dishes.find(d => d.id === dishId); if (!dish) return;
+            const canBeMoved = dish.types.includes('comida') || dish.types.includes('cena');
+            if (!canBeMoved) { showToast('Este plato solo está configurado como postre.'); return; }
+
+            document.getElementById('moveDishName').textContent = dish.name; const parts = slotKey.split('-'); const currentType = parts.pop(); const dateKey = parts.join('-');
+            document.getElementById('moveMealTypeComidaContainer').style.display = dish.types.includes('comida') ? 'flex' : 'none'; document.getElementById('moveMealTypeCenaContainer').style.display = dish.types.includes('cena') ? 'flex' : 'none';
             document.getElementById(`moveMealType${currentType.charAt(0).toUpperCase() + currentType.slice(1)}`).checked = true;
             
-            moveSelectedDate = dateKey;
-            const dParts = dateKey.split('-');
-            moveCurrentMonth = parseInt(dParts[1]) - 1; moveCurrentYear = parseInt(dParts[0]);
-            
+            moveSelectedDate = dateKey; const dParts = dateKey.split('-'); moveCurrentMonth = parseInt(dParts[1]) - 1; moveCurrentYear = parseInt(dParts[0]);
             renderMoveCalendar(); document.getElementById('moveModal').style.display = 'block';
         }
 
@@ -1775,175 +1121,88 @@
         function toggleMoveDateSelection(d) { moveSelectedDate = d; renderMoveCalendar(); }
 
         function renderMoveCalendar() {
-            document.getElementById('moveCalendarMonthYear').textContent = `${monthNames[moveCurrentMonth]} ${moveCurrentYear}`;
-            const grid = document.getElementById('moveCalendarGrid'); grid.innerHTML = '';
+            document.getElementById('moveCalendarMonthYear').textContent = `${monthNames[moveCurrentMonth]} ${moveCurrentYear}`; const grid = document.getElementById('moveCalendarGrid'); grid.innerHTML = '';
             dayNames.forEach(n => { const h=document.createElement('div'); h.className='text-center font-semibold text-gray-500 dark:text-gray-400 py-2 text-sm'; h.textContent=n; grid.appendChild(h); });
-            const firstDay = new Date(moveCurrentYear, moveCurrentMonth, 1).getDay();
-            const firstDayIndex = firstDay === 0 ? 6 : firstDay - 1; // Ajuste para que Lunes sea el día 0
-            const daysInMonth = new Date(moveCurrentYear, moveCurrentMonth+1, 0).getDate();
-            
+            const firstDay = new Date(moveCurrentYear, moveCurrentMonth, 1).getDay(); const firstDayIndex = firstDay === 0 ? 6 : firstDay - 1; const daysInMonth = new Date(moveCurrentYear, moveCurrentMonth+1, 0).getDate();
             for(let i=0; i<firstDayIndex; i++) { const e=document.createElement('div'); e.className='aspect-square rounded-xl opacity-30'; grid.appendChild(e); }
             const today = new Date();
             for(let day=1; day<=daysInMonth; day++) {
-                const dKey = `${moveCurrentYear}-${String(moveCurrentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-                const isSelected = moveSelectedDate === dKey;
-                const isToday = moveCurrentMonth===today.getMonth() && moveCurrentYear===today.getFullYear() && day===today.getDate();
-                
-                const el = document.createElement('div');
-                el.className = 'aspect-square flex flex-col items-center justify-center border rounded-xl cursor-pointer transition-all duration-200 relative overflow-hidden ' + 
-                    (isSelected 
-                        ? 'bg-indigo-100 border-indigo-500 text-indigo-700 dark:bg-indigo-900/60 dark:border-indigo-400 dark:text-indigo-300 shadow-inner scale-95' 
-                        : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500');
-                
-                if (isToday) {
-                    if (!isSelected) el.classList.add('border-indigo-300', 'dark:border-indigo-500', 'bg-indigo-50/50', 'dark:bg-indigo-900/20');
-                    el.innerHTML = `<div class="text-sm font-bold">${day}</div><div class="text-[10px] text-indigo-500 dark:text-indigo-400 absolute bottom-1">Hoy</div>`;
-                } else {
-                    el.innerHTML = `<div class="text-sm font-medium ${isSelected ? 'font-bold text-lg' : ''}">${day}</div>`;
-                }
-                
-                el.onclick = () => toggleMoveDateSelection(dKey);
-                grid.appendChild(el);
+                const dKey = `${moveCurrentYear}-${String(moveCurrentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`; const isSelected = moveSelectedDate === dKey; const isToday = moveCurrentMonth===today.getMonth() && moveCurrentYear===today.getFullYear() && day===today.getDate();
+                const el = document.createElement('div'); el.className = 'aspect-square flex flex-col items-center justify-center border rounded-xl cursor-pointer transition-all duration-200 relative overflow-hidden ' + (isSelected ? 'bg-indigo-100 border-indigo-500 text-indigo-700 dark:bg-indigo-900/60 dark:border-indigo-400 dark:text-indigo-300 shadow-inner scale-95' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500');
+                if (isToday) { if (!isSelected) el.classList.add('border-indigo-300', 'dark:border-indigo-500', 'bg-indigo-50/50', 'dark:bg-indigo-900/20'); el.innerHTML = `<div class="text-sm font-bold">${day}</div><div class="text-[10px] text-indigo-500 dark:text-indigo-400 absolute bottom-1">Hoy</div>`; } 
+                else { el.innerHTML = `<div class="text-sm font-medium ${isSelected ? 'font-bold text-lg' : ''}">${day}</div>`; }
+                el.onclick = () => toggleMoveDateSelection(dKey); grid.appendChild(el);
             }
         }
 
         async function confirmMove() {
-            if(!moveSelectedDate) { showToast('Selecciona fecha'); return; }
-            const tgtType = document.querySelector('input[name="moveMealType"]:checked').value;
-            const tgtSlot = `${moveSelectedDate}-${tgtType}`;
+            if(!moveSelectedDate) { showToast('Selecciona fecha'); return; } const tgtType = document.querySelector('input[name="moveMealType"]:checked').value; const tgtSlot = `${moveSelectedDate}-${tgtType}`;
             if(tgtSlot === movingSlotKey) { closeMoveModal(); return; }
-            
-            const srcArr = weeklyPlan[movingSlotKey];
-            if(srcArr) {
-                const idx = srcArr.indexOf(movingDishId);
-                if(idx > -1) {
-                    srcArr.splice(idx, 1);
-                    if(srcArr.length===0) { delete weeklyPlan[movingSlotKey]; delete weeklyNotes[movingSlotKey]; }
-                }
-            }
-            
-            if(!weeklyPlan[tgtSlot]) weeklyPlan[tgtSlot] = [];
-            if(!weeklyPlan[tgtSlot].includes(movingDishId)) weeklyPlan[tgtSlot].push(movingDishId);
-            
+            const srcArr = weeklyPlan[movingSlotKey]; if(srcArr) { const idx = srcArr.indexOf(movingDishId); if(idx > -1) { srcArr.splice(idx, 1); if(srcArr.length===0) { delete weeklyPlan[movingSlotKey]; delete weeklyNotes[movingSlotKey]; } } }
+            if(!weeklyPlan[tgtSlot]) weeklyPlan[tgtSlot] = []; if(!weeklyPlan[tgtSlot].includes(movingDishId)) weeklyPlan[tgtSlot].push(movingDishId);
             renderWeeklyCalendar(); await savePlanningToCloud(); closeMoveModal(); showToast('Plato movido');
         }
 
         // -- MODAL PLANIFICAR MÚLTIPLE (Desde Platos Disponibles) --
         function openPlanModal(dishId) {
-            planningDishId = dishId; planningDish = dishes.find(d => d.id === dishId);
-            if (!planningDish) return;
+            planningDishId = dishId; planningDish = dishes.find(d => d.id === dishId); if (!planningDish) return;
+            const canBePlanned = planningDish.types.includes('comida') || planningDish.types.includes('cena');
+            if (!canBePlanned) { showToast('Los postres no se pueden planificar en el calendario semanal.'); return; }
+
             document.getElementById('planDishName').textContent = planningDish.name;
-            
             document.getElementById('planLabelComida').style.display = planningDish.types.includes('comida') ? 'flex' : 'none';
             document.getElementById('planLabelCena').style.display = planningDish.types.includes('cena') ? 'flex' : 'none';
-
-            if (planningDish.types.includes('comida')) document.getElementById('planMealTypeComida').checked = true;
-            else if (planningDish.types.includes('cena')) document.getElementById('planMealTypeCena').checked = true;
+            if (planningDish.types.includes('comida')) document.getElementById('planMealTypeComida').checked = true; else document.getElementById('planMealTypeCena').checked = true;
             
-            currentMonth = new Date().getMonth(); currentYear = new Date().getFullYear();
-            selectedDates = []; updateSelectedDatesList(); renderCalendar();
-            document.getElementById('planModal').style.display = 'block';
+            currentMonth = new Date().getMonth(); currentYear = new Date().getFullYear(); selectedDates = []; updateSelectedDatesList(); renderCalendar(); document.getElementById('planModal').style.display = 'block';
         }
         function closePlanModal() { document.getElementById('planModal').style.display = 'none'; }
         function changeMonth(dir) { currentMonth+=dir; if(currentMonth<0){currentMonth=11;currentYear--;}else if(currentMonth>11){currentMonth=0;currentYear++;} renderCalendar(); }
         function goToCurrentMonth() { currentMonth=new Date().getMonth(); currentYear=new Date().getFullYear(); renderCalendar(); }
         
         function renderCalendar() {
-            document.getElementById('calendarMonthYear').textContent = `${monthNames[currentMonth]} ${currentYear}`;
-            const grid = document.getElementById('calendarGrid'); grid.innerHTML = '';
+            document.getElementById('calendarMonthYear').textContent = `${monthNames[currentMonth]} ${currentYear}`; const grid = document.getElementById('calendarGrid'); grid.innerHTML = '';
             dayNames.forEach(n => { const h=document.createElement('div'); h.className='text-center font-semibold text-gray-500 dark:text-gray-400 py-2 text-sm'; h.textContent=n; grid.appendChild(h); });
-            
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-            const firstDayIndex = firstDay === 0 ? 6 : firstDay - 1; // Ajuste para que Lunes sea el día 0
-            const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
-            
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay(); const firstDayIndex = firstDay === 0 ? 6 : firstDay - 1; const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
             for(let i=0; i<firstDayIndex; i++) { const e=document.createElement('div'); e.className='aspect-square rounded-xl opacity-30'; grid.appendChild(e); }
             const today = new Date();
             for(let day=1; day<=daysInMonth; day++) {
-                const dKey = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-                const isSelected = selectedDates.includes(dKey);
-                const isToday = currentMonth===today.getMonth() && currentYear===today.getFullYear() && day===today.getDate();
-                
-                const el = document.createElement('div');
-                el.className = 'aspect-square flex flex-col items-center justify-center border rounded-xl cursor-pointer transition-all duration-200 relative overflow-hidden ' + 
-                    (isSelected 
-                        ? 'bg-indigo-100 border-indigo-500 text-indigo-700 dark:bg-indigo-900/60 dark:border-indigo-400 dark:text-indigo-300 shadow-inner scale-95' 
-                        : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500');
-                
-                if (isToday) {
-                    if (!isSelected) el.classList.add('border-indigo-300', 'dark:border-indigo-500', 'bg-indigo-50/50', 'dark:bg-indigo-900/20');
-                    el.innerHTML = `<div class="text-sm font-bold">${day}</div><div class="text-[10px] text-indigo-500 dark:text-indigo-400 absolute bottom-1">Hoy</div>`;
-                } else {
-                    el.innerHTML = `<div class="text-sm font-medium ${isSelected ? 'font-bold text-lg' : ''}">${day}</div>`;
-                }
-                
-                el.onclick = () => toggleDateSelection(dKey);
-                grid.appendChild(el);
+                const dKey = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`; const isSelected = selectedDates.includes(dKey); const isToday = currentMonth===today.getMonth() && currentYear===today.getFullYear() && day===today.getDate();
+                const el = document.createElement('div'); el.className = 'aspect-square flex flex-col items-center justify-center border rounded-xl cursor-pointer transition-all duration-200 relative overflow-hidden ' + (isSelected ? 'bg-indigo-100 border-indigo-500 text-indigo-700 dark:bg-indigo-900/60 dark:border-indigo-400 dark:text-indigo-300 shadow-inner scale-95' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500');
+                if (isToday) { if (!isSelected) el.classList.add('border-indigo-300', 'dark:border-indigo-500', 'bg-indigo-50/50', 'dark:bg-indigo-900/20'); el.innerHTML = `<div class="text-sm font-bold">${day}</div><div class="text-[10px] text-indigo-500 dark:text-indigo-400 absolute bottom-1">Hoy</div>`; } 
+                else { el.innerHTML = `<div class="text-sm font-medium ${isSelected ? 'font-bold text-lg' : ''}">${day}</div>`; }
+                el.onclick = () => toggleDateSelection(dKey); grid.appendChild(el);
             }
         }
         function toggleDateSelection(dKey) { const i=selectedDates.indexOf(dKey); if(i===-1)selectedDates.push(dKey); else selectedDates.splice(i,1); updateSelectedDatesList(); renderCalendar(); }
         function updateSelectedDatesList() {
-            const list = document.getElementById('selectedDatesList');
-            if(selectedDates.length===0){ list.innerHTML='<p class="text-indigo-400 dark:text-indigo-500/70 text-sm italic">No has seleccionado ninguna fecha</p>'; return; }
-            list.innerHTML='';
+            const list = document.getElementById('selectedDatesList'); if(selectedDates.length===0){ list.innerHTML='<p class="text-indigo-400 dark:text-indigo-500/70 text-sm italic">No has seleccionado ninguna fecha</p>'; return; } list.innerHTML='';
             [...selectedDates].sort().forEach(dKey => {
                 const date = new Date(dKey);
-                const html = `<div class="bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700 px-3 py-1 rounded-lg text-sm font-semibold flex items-center shadow-sm">${date.toLocaleDateString('es-ES', {day:'numeric',month:'short'})} <span class="ml-2 text-indigo-400 hover:text-indigo-900 dark:hover:text-white cursor-pointer text-lg leading-none" onclick="removeSelectedDate('${dKey}')">&times;</span></div>`;
-                list.innerHTML += html;
+                list.innerHTML += `<div class="bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700 px-3 py-1 rounded-lg text-sm font-semibold flex items-center shadow-sm">${date.toLocaleDateString('es-ES', {day:'numeric',month:'short'})} <span class="ml-2 text-indigo-400 hover:text-indigo-900 dark:hover:text-white cursor-pointer text-lg leading-none" onclick="removeSelectedDate('${dKey}')">&times;</span></div>`;
             });
         }
         function removeSelectedDate(dKey) { const i=selectedDates.indexOf(dKey); if(i!==-1){selectedDates.splice(i,1); updateSelectedDatesList(); renderCalendar();} }
         
         async function confirmPlan() {
-            if(selectedDates.length===0) { showToast('Selecciona fecha'); return; }
-            const selectedMealTypeEl = document.querySelector('input[name="planMealType"]:checked');
-            if (!selectedMealTypeEl) { showToast('No se puede planificar este plato en el calendario.'); return; }
-            const mealType = selectedMealTypeEl.value;
-            if(!planningDish.types.includes(mealType)) { showToast(`Uso exclusivo para: ${planningDish.types.join(', ')}`); return; }
-            
-            selectedDates.forEach(dKey => {
-                const slotKey = `${dKey}-${mealType}`;
-                if(!weeklyPlan[slotKey]) weeklyPlan[slotKey] = [];
-                if(!weeklyPlan[slotKey].includes(planningDishId)) weeklyPlan[slotKey].push(planningDishId);
-            });
-            renderWeeklyCalendar(); await savePlanningToCloud(); closePlanModal();
-            showToast(`Planificado en ${selectedDates.length} fechas`);
+            if(selectedDates.length===0) { showToast('Selecciona fecha'); return; } const mealType = document.querySelector('input[name="planMealType"]:checked').value; if(!planningDish.types.includes(mealType)) { showToast(`Uso exclusivo para: ${planningDish.types.join(' y ')}`); return; }
+            selectedDates.forEach(dKey => { const slotKey = `${dKey}-${mealType}`; if(!weeklyPlan[slotKey]) weeklyPlan[slotKey] = []; if(!weeklyPlan[slotKey].includes(planningDishId)) weeklyPlan[slotKey].push(planningDishId); });
+            renderWeeklyCalendar(); await savePlanningToCloud(); closePlanModal(); showToast(`Planificado en ${selectedDates.length} fechas`);
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').textContent = msg;
-            toast.classList.remove('translate-y-full');
-            setTimeout(() => toast.classList.add('translate-y-full'), 3000);
-        }
+        function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg; toast.classList.remove('translate-y-full'); setTimeout(() => toast.classList.add('translate-y-full'), 3000); }
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
         function toggleFullScreen() {
             const btn = document.getElementById('fullscreenBtn'); const icon = btn.querySelector('i'); const elem = document.documentElement;
             if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled) { showToast('Pantalla completa no soportada aquí.'); return; }
-            if (!document.fullscreenElement) {
-                const req = elem.requestFullscreen || elem.webkitRequestFullscreen;
-                if(req) req.call(elem).then(()=>{icon.className='fas fa-compress text-2xl';}).catch(()=>{});
-            } else {
-                const ext = document.exitFullscreen || document.webkitExitFullscreen;
-                if(ext) ext.call(document).then(()=>{icon.className='fas fa-expand text-2xl';}).catch(()=>{});
-            }
+            if (!document.fullscreenElement) { const req = elem.requestFullscreen || elem.webkitRequestFullscreen; if(req) req.call(elem).then(()=>{icon.className='fas fa-compress text-2xl';}).catch(()=>{}); } 
+            else { const ext = document.exitFullscreen || document.webkitExitFullscreen; if(ext) ext.call(document).then(()=>{icon.className='fas fa-expand text-2xl';}).catch(()=>{}); }
         }
         
         window.onclick = function(event) {
             const modalesIds = ['confirmModal', 'clearWeekModal', 'planModal', 'clearListModal', 'notesModal', 'moveModal', 'selectDishModal', 'dishInfoModal'];
-            modalesIds.forEach(id => {
-                const modal = document.getElementById(id);
-                if (event.target === modal) {
-                    if (id === 'selectDishModal') closeSelectDishModal();
-                    else if (id === 'dishInfoModal') closeDishInfoModal();
-                    else modal.style.display = 'none';
-                }
-            });
-            
-            if (!event.target.closest('#settingsBtn') && !event.target.closest('#settingsDropdown')) {
-                const dropdown = document.getElementById('settingsDropdown');
-                if (dropdown && dropdown.classList.contains('show')) dropdown.classList.remove('show');
-            }
+            modalesIds.forEach(id => { const modal = document.getElementById(id); if (event.target === modal) { if (id === 'selectDishModal') closeSelectDishModal(); else if (id === 'dishInfoModal') closeDishInfoModal(); else modal.style.display = 'none'; } });
+            if (!event.target.closest('#settingsBtn') && !event.target.closest('#settingsDropdown')) { const dropdown = document.getElementById('settingsDropdown'); if (dropdown && dropdown.classList.contains('show')) dropdown.classList.remove('show'); }
         }
         
         function printCalendar() { updatePrintDate(); setTimeout(() => window.print(), 100); }
@@ -1951,120 +1210,47 @@
         
         // SHOPPING LIST
         function toggleShoppingList() { 
-            const container = document.getElementById('shoppingListContainer'); 
-            const overlay = document.getElementById('shoppingListOverlay');
-            const isShowing = container.classList.contains('translate-x-0');
-            
-            if (isShowing) {
-                container.classList.remove('translate-x-0');
-                container.classList.add('translate-x-full');
-                overlay.classList.remove('opacity-100');
-                overlay.classList.add('opacity-0');
-                setTimeout(() => overlay.classList.add('hidden'), 300);
-            } else {
-                overlay.classList.remove('hidden');
-                setTimeout(() => {
-                    overlay.classList.remove('opacity-0');
-                    overlay.classList.add('opacity-100');
-                    container.classList.remove('translate-x-full');
-                    container.classList.add('translate-x-0');
-                    document.getElementById('shoppingListInput').focus();
-                }, 10);
-            }
+            const container = document.getElementById('shoppingListContainer'); const overlay = document.getElementById('shoppingListOverlay'); const isShowing = container.classList.contains('translate-x-0');
+            if (isShowing) { container.classList.remove('translate-x-0'); container.classList.add('translate-x-full'); overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0'); setTimeout(() => overlay.classList.add('hidden'), 300); } 
+            else { overlay.classList.remove('hidden'); setTimeout(() => { overlay.classList.remove('opacity-0'); overlay.classList.add('opacity-100'); container.classList.remove('translate-x-full'); container.classList.add('translate-x-0'); document.getElementById('shoppingListInput').focus(); }, 10); }
         }
         function handleShoppingListKeyPress(e) { if (e.key === 'Enter') addShoppingListItem(); }
-        async function addShoppingListItem() {
-            const input = document.getElementById('shoppingListInput'); const text = input.value.trim();
-            if (!text) return;
-            shoppingList.push({ id: Date.now(), text, completed: false });
-            renderShoppingList(); input.value = ''; input.focus(); await saveShoppingToCloud();
-        }
+        async function addShoppingListItem() { const input = document.getElementById('shoppingListInput'); const text = input.value.trim(); if (!text) return; shoppingList.push({ id: Date.now(), text, completed: false }); renderShoppingList(); input.value = ''; input.focus(); await saveShoppingToCloud(); }
         async function removeShoppingListItem(id) { shoppingList = shoppingList.filter(i => i.id !== id); renderShoppingList(); await saveShoppingToCloud(); }
         function clearShoppingList() { document.getElementById('clearListModal').style.display = 'block'; }
         function closeClearListModal() { document.getElementById('clearListModal').style.display = 'none'; }
         async function confirmClearList() { shoppingList = []; renderShoppingList(); closeClearListModal(); await saveShoppingToCloud(); showToast('Lista limpiada'); }
         function renderShoppingList() {
             const container = document.getElementById('shoppingListItems');
-            if (shoppingList.length === 0) { 
-                container.innerHTML = '<div id="shoppingListEmpty" class="text-center py-12"><i class="fas fa-shopping-basket text-5xl text-gray-300 dark:text-gray-600 mb-4"></i><p class="text-gray-500 dark:text-gray-400">No hay ingredientes en tu lista de compra.</p></div>'; 
-                return; 
-            }
-            container.innerHTML = '';
-            shoppingList.forEach(item => {
-                container.innerHTML += `
-                    <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm mb-2 group transition-all">
-                        <span class="text-gray-700 dark:text-gray-200 font-medium break-words pr-2">${item.text}</span>
-                        <button class="shrink-0 w-8 h-8 rounded-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 flex items-center justify-center transition-colors opacity-70 group-hover:opacity-100" onclick="removeShoppingListItem(${item.id})" title="Eliminar ingrediente">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>`;
-            });
+            if (shoppingList.length === 0) { container.innerHTML = '<div id="shoppingListEmpty" class="text-center py-12"><i class="fas fa-shopping-basket text-5xl text-gray-300 dark:text-gray-600 mb-4"></i><p class="text-gray-500 dark:text-gray-400">No hay ingredientes en tu lista de compra.</p></div>'; return; }
+            container.innerHTML = ''; shoppingList.forEach(item => { container.innerHTML += `<div class="flex items-center justify-between p-3 bg-white dark:bg-gray-700/50 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm mb-2 group transition-all"><span class="text-gray-700 dark:text-gray-200 font-medium break-words pr-2">${item.text}</span><button class="shrink-0 w-8 h-8 rounded-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 flex items-center justify-center transition-colors opacity-70 group-hover:opacity-100" onclick="removeShoppingListItem(${item.id})" title="Eliminar ingrediente"><i class="fas fa-trash"></i></button></div>`; });
         }
-        function printShoppingList() {
-            if (shoppingList.length === 0) { showToast('La lista está vacía.'); return; }
-            document.getElementById('shoppingListPrintDate').textContent = new Date().toLocaleDateString('es-ES');
-            const items = document.getElementById('shoppingListPrintItems'); items.innerHTML = '';
-            shoppingList.forEach(item => { items.innerHTML += `<div class="shopping-list-print-item">• ${item.text}</div>`; });
-            window.print();
-        }
+        function printShoppingList() { if (shoppingList.length === 0) { showToast('La lista está vacía.'); return; } document.getElementById('shoppingListPrintDate').textContent = new Date().toLocaleDateString('es-ES'); const items = document.getElementById('shoppingListPrintItems'); items.innerHTML = ''; shoppingList.forEach(item => { items.innerHTML += `<div class="shopping-list-print-item">• ${item.text}</div>`; }); window.print(); }
 
         // NOTAS E INGREDIENTES
-        function openNotesModal(slotKey) {
-            document.getElementById('noteSlotKey').value = slotKey;
-            document.getElementById('slotNotes').value = weeklyNotes[slotKey] || '';
-            document.getElementById('notesModal').style.display = 'block';
-        }
+        function openNotesModal(slotKey) { document.getElementById('noteSlotKey').value = slotKey; document.getElementById('slotNotes').value = weeklyNotes[slotKey] || ''; document.getElementById('notesModal').style.display = 'block'; }
         function closeNotesModal() { document.getElementById('notesModal').style.display = 'none'; }
-        async function saveNotes() {
-            const slotKey = document.getElementById('noteSlotKey').value; const text = document.getElementById('slotNotes').value.trim();
-            if (text) weeklyNotes[slotKey] = text; else delete weeklyNotes[slotKey];
-            renderWeeklyCalendar(); closeNotesModal(); await savePlanningToCloud(); showToast('Notas guardadas');
-        }
-        async function addNotesToShoppingList() {
-            const text = document.getElementById('slotNotes').value.trim();
-            if(!text) return;
-            const items = text.split(/[,;\n]+/).map(i => i.trim()).filter(i => i);
-            items.forEach(i => shoppingList.push({ id: Date.now()+Math.random(), text: i, completed: false }));
-            renderShoppingList(); await saveShoppingToCloud(); closeNotesModal(); showToast('Añadido a la lista');
-        }
-        async function addDishIngredientsToList(dishId) {
-            const dish = dishes.find(d => d.id === dishId);
-            if (!dish || !dish.ingredients) { showToast('Sin ingredientes guardados'); return; }
-            const items = dish.ingredients.split(/[,;\n]+/).map(i => i.trim()).filter(i => i);
-            if (items.length === 0) return;
-            items.forEach(i => shoppingList.push({ id: Date.now()+Math.random(), text: i, completed: false }));
-            renderShoppingList(); await saveShoppingToCloud(); showToast('Ingredientes añadidos');
-        }
+        async function saveNotes() { const slotKey = document.getElementById('noteSlotKey').value; const text = document.getElementById('slotNotes').value.trim(); if (text) weeklyNotes[slotKey] = text; else delete weeklyNotes[slotKey]; renderWeeklyCalendar(); closeNotesModal(); await savePlanningToCloud(); showToast('Notas guardadas'); }
+        async function addNotesToShoppingList() { const text = document.getElementById('slotNotes').value.trim(); if(!text) return; const items = text.split(/[,;\n]+/).map(i => i.trim()).filter(i => i); items.forEach(i => shoppingList.push({ id: Date.now()+Math.random(), text: i, completed: false })); renderShoppingList(); await saveShoppingToCloud(); closeNotesModal(); showToast('Añadido a la lista'); }
+        async function addDishIngredientsToList(dishId) { const dish = dishes.find(d => d.id === dishId); if (!dish || !dish.ingredients) { showToast('Sin ingredientes guardados'); return; } const items = dish.ingredients.split(/[,;\n]+/).map(i => i.trim()).filter(i => i); if (items.length === 0) return; items.forEach(i => shoppingList.push({ id: Date.now()+Math.random(), text: i, completed: false })); renderShoppingList(); await saveShoppingToCloud(); showToast('Ingredientes añadidos'); }
 
-        // BACKUPS
         function toggleSettingsMenu() { document.getElementById('settingsDropdown').classList.toggle('show'); }
-        function exportBackup() {
-            const data = JSON.stringify({ dishes, weeklyPlan, weeklyNotes, shoppingList, exportDate: new Date().toISOString() });
-            const link = document.createElement('a'); link.href = 'data:application/json;charset=utf-8,'+ encodeURIComponent(data);
-            link.download = 'Copia_Planificador_' + new Date().toLocaleDateString('es-ES').replace(/\//g, '-') + '.json';
-            link.click(); document.getElementById('settingsDropdown').classList.remove('show');
-        }
+        function exportBackup() { const data = JSON.stringify({ dishes, weeklyPlan, weeklyNotes, shoppingList, exportDate: new Date().toISOString() }); const link = document.createElement('a'); link.href = 'data:application/json;charset=utf-8,'+ encodeURIComponent(data); link.download = 'Copia_Planificador_' + new Date().toLocaleDateString('es-ES').replace(/\//g, '-') + '.json'; link.click(); document.getElementById('settingsDropdown').classList.remove('show'); }
         function importBackup(e) {
-            const file = e.target.files[0]; if(!file) return;
-            const reader = new FileReader();
+            const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
             reader.onload = async function(evt) {
                 try {
-                    const parsed = JSON.parse(evt.target.result);
-                    if (!parsed.dishes || !Array.isArray(parsed.dishes)) throw new Error();
+                    const parsed = JSON.parse(evt.target.result); if (!parsed.dishes || !Array.isArray(parsed.dishes)) throw new Error();
                     if (confirm('Esto SOBREESCRIBIRÁ todos los platos y planes actuales.\n¿Continuar?')) {
                         if (isCloudReady) {
                             for (const d of parsed.dishes) await saveDishToCloud(d);
                             weeklyPlan = parsed.weeklyPlan || {}; weeklyNotes = parsed.weeklyNotes || {}; await savePlanningToCloud();
                             shoppingList = parsed.shoppingList || []; await saveShoppingToCloud();
-                        } else {
-                            dishes=parsed.dishes; weeklyPlan=parsed.weeklyPlan||{}; weeklyNotes=parsed.weeklyNotes||{}; shoppingList=parsed.shoppingList||[];
-                        }
+                        } else { dishes=parsed.dishes; weeklyPlan=parsed.weeklyPlan||{}; weeklyNotes=parsed.weeklyNotes||{}; shoppingList=parsed.shoppingList||[]; }
                         renderDishesByType(); renderWeeklyCalendar(); renderShoppingList(); showToast('Copia restaurada');
                     }
-                } catch(err) { alert('Archivo JSON inválido.'); }
-                e.target.value = '';
-            };
-            reader.readAsText(file); document.getElementById('settingsDropdown').classList.remove('show');
+                } catch(err) { alert('Archivo JSON inválido.'); } e.target.value = '';
+            }; reader.readAsText(file); document.getElementById('settingsDropdown').classList.remove('show');
         }
     </script>
 </body>
